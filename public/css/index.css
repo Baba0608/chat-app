@@ -28,7 +28,14 @@ body{
     margin-bottom: 10px;
 }
 
-.signup-container input{
+#error-msg{
+    color: red;
+    display: none;
+}
+
+
+
+.input-details{
     width: 100%;
     margin-bottom: 10px;
     margin-top: 2px;
@@ -36,6 +43,12 @@ body{
     padding: 5px 3px;
     border-radius: 3px;
     border: 1px solid black;
+}
+
+.empty , .wrong-password {
+    background-color: rgb(250, 208, 208);
+    border: 1px solid red;
+    
 }
 
 .signup-button-container{
@@ -55,6 +68,12 @@ body{
 
 .signup-button-container button:hover{
     background-color: rgb(42, 42, 243);
+}
+
+#wrong-password{
+    color: red;
+    font-size: 15px;
+    display: none;
 }
 
 

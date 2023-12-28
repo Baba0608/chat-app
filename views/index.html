@@ -24,20 +24,23 @@
 
                 <div class="signup-input">
 
+                    <p id="error-msg">* Please fill all fields</p>
+
                     <label for="username">Username</label> <br>
-                    <input type="text" id="username" name="username" placeholder="Username"> <br>
+                    <input type="text" id="username" name="username" placeholder="Username" class="input-details"> <br>
 
                     <label for="email">Email</label> <br>
-                    <input type="text" id="email" name="email" placeholder="Enter email"> <br>
+                    <input type="text" id="email" name="email" placeholder="Enter email" class="input-details"> <br>
 
                     <label for="mobile">Mobile number</label> <br>
-                    <input type="text" id="mobile" name="mobile" placeholder="Enter mobile number"> <br>
+                    <input type="text" id="mobile" name="mobile" placeholder="Enter mobile number" class="input-details"> <br>
 
                     <label for="password">Password</label> <br>
-                    <input type="password" name="password" id="password" placeholder="Password"> <br>
+                    <input type="password" name="password" id="password" placeholder="Password" class="input-details"> <br>
 
                     <label for="conform-password">Conform Password</label> <br>
-                    <input type="password" name="conform-password" id="conform-password" placeholder="conform password">
+                    <p id="wrong-password">*Password is not matching.</p>
+                    <input type="password" name="conform-password" id="conform-password" placeholder="conform password" class="input-details">
 
                     <div class="signup-button-container">
                         <button id="signup-button">Signup</button>
@@ -55,5 +58,7 @@
 
     </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="/public/js/signup.js"></script>
 </body>
 </html>
