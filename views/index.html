@@ -7,24 +7,53 @@
     <link rel="stylesheet" href="/public/css/index.css">
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Sign Up</h2>
-        <form>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+    <div class="container">
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <header>
 
-            <label for="confirm-password">Confirm Password:</label>
-            <input type="password" id="confirm-password" name="confirm-password" required>
+        </header>
 
-            <input type="submit" value="Sign Up">
-        </form>
-        <p>Already have an account? <a href="/login">Login</a></p>
+        <main>
+
+            <div class="signup-container">
+                
+                <div class="signup-heading">
+                    <h2>Signup</h2>
+                </div>
+
+                <div class="signup-input">
+
+                    <label for="username">Username</label> <br>
+                    <input type="text" id="username" name="username" placeholder="Username"> <br>
+
+                    <label for="email">Email</label> <br>
+                    <input type="text" id="email" name="email" placeholder="Enter email"> <br>
+
+                    <label for="mobile">Mobile number</label> <br>
+                    <input type="text" id="mobile" name="mobile" placeholder="Enter mobile number"> <br>
+
+                    <label for="password">Password</label> <br>
+                    <input type="password" name="password" id="password" placeholder="Password"> <br>
+
+                    <label for="conform-password">Conform Password</label> <br>
+                    <input type="password" name="conform-password" id="conform-password" placeholder="conform password">
+
+                    <div class="signup-button-container">
+                        <button id="signup-button">Signup</button>
+                    </div>
+
+                </div>
+
+                <div>
+                    <p>Already have an account. <a href="./login.html">Login</a></p>
+                </div>
+
+
+            </div>
+        </main>
+
     </div>
+    
 </body>
 </html>
