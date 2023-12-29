@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+}
+
+.container main {
+    display: flex;
+    justify-content: center;
+}
+
+.login-container {
+    width: 550px;
+    border: 1px solid rgb(95, 95, 238);
+    padding: 20px;
+    font-size: 20px;
+    margin-top: 30px;
+
+}
+
+.login-heading {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+#error-msg {
+    color: red;
+    display: none;
+}
+
+
+
+.input-details {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 2px;
+    font-size: 16px;
+    padding: 5px 3px;
+    border-radius: 3px;
+    border: 1px solid black;
+}
+
+.empty,
+.wrong-password {
+    background-color: rgb(250, 208, 208);
+    border: 1px solid red;
+
+}
+
+.login-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0px;
+}
+
+.login-button-container button {
+    font-size: 18px;
+    padding: 5px 25px;
+    background-color: rgb(95, 95, 238);
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+
+.login-button-container button:hover {
+    background-color: rgb(42, 42, 243);
+}
+
+#wrong-password {
+    color: red;
+    font-size: 15px;
+    display: none;
+}
+
+
+@media (max-width: 600px) {
+
+    .login-container {
+        width: 90%;
+    }
+}

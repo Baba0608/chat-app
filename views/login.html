@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/public/css/login.css">
+</head>
+<body>
+
+
+    <div class="container">
+    
+        <header>
+    
+        </header>
+    
+        <main>
+    
+            <div class="login-container">
+    
+                <div class="login-heading">
+                    <h2>Login</h2>
+                </div>
+    
+                <div class="login-input">
+    
+                    <p id="error-msg">* Please fill all fields</p>
+    
+                    <label for="email">Email</label> <br>
+                    <input type="text" id="email" name="email" placeholder="Enter email" class="input-details"> <br>
+    
+                    <label for="password">Password</label> <br>
+                    <p id="wrong-password">*Password is incorrect.</p>
+                    <input type="password" name="password" id="password" placeholder="Password" class="input-details"> <br>
+    
+                    <div class="login-button-container">
+                        <button id="login-button">Login</button>
+                    </div>
+    
+                </div>
+    
+                <div>
+                    <p>Don't have an account. <a href="./index.html">Signup</a></p>
+                </div>
+    
+    
+            </div>
+        </main>
+    
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="/public/js/login.js"></script>
+    
+</body>
+</html>

@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 4000;
 
 sequelize
   .sync()
-  //.sync({force: true})
+  //   .sync({ force: true })
   .then(() => {
     console.log(`SERVER RUNNING ON PORT NUMBER ${PORT}`);
     app.listen(PORT);

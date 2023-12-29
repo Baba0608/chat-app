@@ -1,5 +1,13 @@
 const Users = require("../models/users");
 
+const exists = (email) => {
+  return Users.findOne({
+    where: {
+      email: email,
+    },
+  });
+};
+
 const userSignup = (req, hash) => {
   const { userName, email, mobileNumber } = req.body;
   return Users.create({
@@ -11,3 +19,4 @@ const userSignup = (req, hash) => {
 };
 
 exports.userSignup = userSignup;
+exports.exists = exists;

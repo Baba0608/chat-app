@@ -50,9 +50,15 @@ signupButton.addEventListener("click", async (e) => {
           password: password.value,
         });
 
-        console.log(result);
+        // console.log(result);
+        alert("User signed up successfully.");
       } catch (err) {
-        console.log(err);
+        // console.log(err);
+        if (err.message === "Request failed with status code 404") {
+          alert("User Already Exists.");
+        } else {
+          alert("Something went wrong.");
+        }
       }
 
       username.value = "";
