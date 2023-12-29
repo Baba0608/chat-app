@@ -30,6 +30,7 @@ loginButton.addEventListener("click", async (e) => {
       });
 
       alert("User Logged in successfully.");
+      window.location.assign("./chat-page.html");
       // console.log(result);
       localStorage.setItem("chat-app-token", result.data.token);
 
