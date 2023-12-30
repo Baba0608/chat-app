@@ -52,6 +52,7 @@ signupButton.addEventListener("click", async (e) => {
 
         // console.log(result);
         alert("User signed up successfully.");
+        window.location.assign("./login.html");
       } catch (err) {
         // console.log(err);
         if (err.message === "Request failed with status code 404") {
