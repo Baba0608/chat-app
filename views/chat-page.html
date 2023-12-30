@@ -4,10 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
+    <link rel="stylesheet" href="/public/css/chat-page.css">
 </head>
 <body>
 
-    <h1>This is <strong>CHAT PAGE.</strong></h1>
+    <div class="container">
+        <h1>Chat</h1>
+
+
+        <div class="messages-container" id="messages-container">
+
+        </div>
+
+
+        <div class="enter-message-container">
+
+            <input type="text" name="message-input" id="message-input" placeholder="enter message">
+            
+            <div class="button-container">
+                <button id="send-button">Send</button>
+            </div>
+            
+        </div>
+    </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="/public/js/chat-page.js"></script>
 </body>
 </html>
