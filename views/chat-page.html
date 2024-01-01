@@ -8,24 +8,72 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>Chat</h1>
+    <div class="container" id="container">
 
+        <div class="chat-container" id="chat-container">
+
+            <div class="search-chat-container">
+
+                <div class="heading-add-chat">
+
+                    <div class="heading">
+                        <h2>Chat</h2>
+                    </div>
+
+                    <div class="add-chat">
+                        <button id="create-chat-group">+</button>
+                    </div>
+                </div>
+                
+                <div class="search-chat">
+                    <input type="text" name="chat-name" id="chat-name" placeholder="search a chat">
+                </div>
+                
+            </div>
+
+            <div class="chat-list">
+            
+                <div class="chat" id="chat">
+                    <p>User 1</p>
+                </div>
+            
+                <div class="chat">
+                    <p>User 2</p>
+                </div>
+            </div>
+
+        </div>
 
         <div class="messages-container" id="messages-container">
 
-        </div>
+            <div class="details">
 
+                <div class="back">
+                    <p><img  id="back-image" src="/public/images/back-arrow.jpg" alt="back"></p>
+                </div>
 
-        <div class="enter-message-container">
-
-            <input type="text" name="message-input" id="message-input" placeholder="enter message">
-            
-            <div class="button-container">
-                <button id="send-button">Send</button>
+                <div class="name-activity">
+                    <p id="chat-name">User 1</p>
+                    <p id="activity-status">Online</p>
+                </div>
+                
             </div>
             
+            <div class="messages" id="messages">
+
+            </div>
+
+            <div class="enter-message-container">
+            
+                <input type="text" name="message-input" id="message-input" placeholder="enter message">
+            
+                <div class="button-container">
+                    <button id="send-button">Send</button>
+                </div>
+            
+            </div>
         </div>
+        
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
