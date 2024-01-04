@@ -1,23 +1,39 @@
-const Chats = require("../models/chats");
+const Privatefriends = require("../models/private-friend");
 const Users = require("../models/users");
+const Privatechat = require("../models/private-chat");
 
-const storeMessage = (req, message) => {
-  return req.user.createChat({
-    message: message,
-  });
-};
-
-const getMessagesFromDB = () => {
-  return Chats.findAll({
-    attributes: ["id", "message"],
+const getChats = (id) => {
+  return Privatefriends.findAll({
+    attributes: ["friendId", "friendname", "privateId"],
     include: [
       {
         model: Users,
-        attributes: ["username", "id"],
+        attributes: ["mobilenumber"],
       },
     ],
+    where: {
+      userId: id,
+    },
   });
 };
 
-exports.storeMessage = storeMessage;
-exports.getMessagesFromDB = getMessagesFromDB;
+const postChat = (message, from, to, privateId) => {
+  return Privatechat.create({
+    message: message,
+    privateId: privateId,
+    from: from,
+    to: to,
+  });
+};
+
+const getMessages = (privateId) => {
+  return Privatechat.findAll({
+    where: {
+      privateId: privateId,
+    },
+  });
+};
+
+exports.getChats = getChats;
+exports.postChat = postChat;
+exports.getMessages = getMessages;

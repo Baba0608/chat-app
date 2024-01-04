@@ -2,38 +2,32 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../utils/database");
 
-const Users = sequelize.define("user", {
+const Privatefriends = sequelize.define("privatefriend", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
 
-  username: {
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+
+  friendId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+
+  friendname: {
     type: Sequelize.STRING,
     allowNull: false,
   },
 
-  email: {
+  privateId: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
-  },
-
-  mobilenumber: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-
-  socketId: {
-    type: Sequelize.STRING,
-    allowNull: true,
   },
 });
 
-module.exports = Users;
+module.exports = Privatefriends;

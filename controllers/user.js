@@ -86,5 +86,65 @@ const login = async (req, res, next) => {
   }
 };
 
+const createNewChat = async (req, res, next) => {
+  try {
+    const { friendName, friendNumber } = req.body;
+
+    const user = await UserServices.exists(false, friendNumber);
+
+    if (user) {
+      const userId = req.user.dataValues.id;
+      const result = await UserServices.createPrivateFriend(
+        userId,
+        user.id,
+        friendName
+      );
+
+      return res.status(201).json({ success: true, result });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "User with the given number is not on the app",
+      });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong." });
+  }
+};
+
+const updateSocketId = async (req, res, next) => {
+  try {
+    const { socketId } = req.body;
+    const id = req.user.dataValues.id;
+    const result = await UserServices.updateSocketId(id, socketId);
+    return res
+      .status(200)
+      .json({ success: true, message: "Updated socketId", result });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, message: "something went wrong." });
+  }
+};
+
+const getSocketId = async (req, res, next) => {
+  try {
+    const friendId = req.params.friendid;
+
+    const result = await UserServices.getUser(friendId);
+
+    return res.status(200).json({ success: true, socketId: result.socketId });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong." });
+  }
+};
+
 exports.signup = signup;
 exports.login = login;
+exports.createNewChat = createNewChat;
+exports.updateSocketId = updateSocketId;
+exports.getSocketId = getSocketId;

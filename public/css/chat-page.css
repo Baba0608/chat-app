@@ -24,10 +24,17 @@ body{
 }
 
 .messages-container{
+    display: none;
     width: 75%;
     background-color: rgb(183, 248, 189);
     min-height: 100vh;
-    
+}
+
+.empty-chat-page{
+    width: 75%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .search-chat-container{
@@ -68,6 +75,10 @@ body{
     padding: 0px 5px;
     border: none;
     background-color: lightgray;
+}
+
+.add-chat button:hover{
+    background-color: rgb(177, 176, 176);
 }
 
 
@@ -131,6 +142,29 @@ body{
     transition: all ease-in-out 300ms;
 }
 
+.message{
+    margin: 5px 10px;
+}
+
+.message p{
+    background-color: lightseagreen;
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+.message-received{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.message-sent{
+    display: flex;
+    justify-content: flex-end;
+    text-align: end;
+}
+
+
+
 @media (min-width: 900px) and (max-width: 1300px){
 
     .chat-container{
@@ -139,7 +173,12 @@ body{
     }
 
     .messages-container{
-        display: block;
+        display: none;
+        width: 70%;
+    }
+
+    .empty-chat-page{
+        display: flex;
         width: 70%;
     }
 }
@@ -151,7 +190,12 @@ body{
     }
 
     .messages-container{
-        display: block;
+        display: none;
+        width: 60%;
+    }
+
+    .empty-chat-page{
+        display: 'flex';
         width: 60%;
     }
 }
@@ -167,6 +211,10 @@ body{
         width: 100%;
     }
 
+    .empty-chat-page{
+        display: none;
+    }
+    
     .back{
         display: flex;
         align-items: center;

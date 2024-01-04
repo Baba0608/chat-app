@@ -21,7 +21,7 @@
                     </div>
 
                     <div class="add-chat">
-                        <button id="create-chat-group">+</button>
+                        <button id="create-chat-group" title="create chat/group" >+</button>
                     </div>
                 </div>
                 
@@ -31,35 +31,36 @@
                 
             </div>
 
-            <div class="chat-list">
+            <div class="chat-list" id="chat-list">
             
-                <div class="chat" id="chat">
+                <!-- <div class="chat">
                     <p>User 1</p>
-                </div>
+                </div> -->
             
-                <div class="chat">
-                    <p>User 2</p>
-                </div>
             </div>
 
         </div>
 
+        <div class="empty-chat-page" id="empty-chat-page">
+            <p>Click on any private chat or group.</p>
+        </div>
+
         <div class="messages-container" id="messages-container">
 
-            <div class="details">
+            <div class="details" id="details">
 
                 <div class="back">
                     <p><img  id="back-image" src="/public/images/back-arrow.jpg" alt="back"></p>
                 </div>
 
-                <div class="name-activity">
+                <!-- <div class="name-activity">
                     <p id="chat-name">User 1</p>
                     <p id="activity-status">Online</p>
-                </div>
+                </div> -->
                 
             </div>
             
-            <div class="messages" id="messages">
+            <div class="messages" id="messages" style="overflow-y:scroll;">
 
             </div>
 
@@ -77,6 +78,7 @@
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
     <script src="/public/js/chat-page.js"></script>
 </body>
 </html>

@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body{
+    background-color: beige;
+    font-size: 20px;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+}
+
+.create-private-group{
+    background-color: lightgray;
+    border-radius: 10px;
+    
+    
+}
+
+.private-group{
+    width: 500px;
+    display: flex;
+}
+
+.private , .group{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+
+.private:hover , .group:hover{
+    cursor: pointer;
+}
+
+.button{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.button button{
+    font-size: 18px;
+    padding: 5px 20px;
+}
+
+.active{
+    border-bottom: 3px solid green;
+}
+
+input{
+    font-size: 18px;
+    padding: 2px 5px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.private-details , .group-details{
+    padding: 20px;
+}
+
+.group-details{
+    display: none;
+}
+
