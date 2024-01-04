@@ -10,8 +10,10 @@ const chatList = document.getElementById("chat-list");
 const container = document.getElementById("container");
 const chatContainer = document.getElementById("chat-container");
 const messagesContainer = document.getElementById("messages-container");
+const messageInput = document.getElementById("message-input");
 const emptyChatPage = document.getElementById("empty-chat-page");
 const details = document.getElementById("details");
+const saveChatNameOverlay = document.getElementById("save-chat-name-overlay");
 
 const backArrow = document.getElementById("back-image");
 let ACTIVE_CHAT = false;
@@ -44,16 +46,23 @@ const token = localStorage.getItem("chat-app-token");
         );
         chatList.appendChild(chat);
       } else {
+        const saveButton = createSaveChatNameButton();
         const chat = createPersonalChat(
           friend.user.mobilenumber,
           friend.friendId,
-          friend.privateId
+          friend.privateId,
+          saveButton
         );
         chatList.appendChild(chat);
       }
     });
 
-    // console.log(FRIENDS_LIST);
+    const saveButtons = document.querySelectorAll(".save-button");
+    saveButtons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        displaySaveChatNameOverlay(e);
+      });
+    });
 
     socket.emit("friends-list", FRIENDS_LIST);
 
@@ -62,78 +71,82 @@ const token = localStorage.getItem("chat-app-token");
       chat.addEventListener("click", async (e) => {
         e.preventDefault();
 
-        messagesDiv.innerHTML = "";
-        const name = chat.firstChild.textContent;
+        if (e.target.classList.contains("chat")) {
+          messagesDiv.innerHTML = "";
+          const name = chat.firstChild.textContent;
 
-        FRIEND_ID = chat.id;
-        PRIVATE_iD = chat.privateId;
-        FRIEND_NAME = name;
+          FRIEND_ID = chat.id;
+          PRIVATE_iD = chat.privateId;
+          FRIEND_NAME = name;
 
-        const result = await axios.get(
-          `${website}/user/getsocketid/${FRIEND_ID}`,
-          {
-            headers: {
-              authorization: token,
-            },
-          }
-        );
+          const result = await axios.get(
+            `${website}/user/getsocketid/${FRIEND_ID}`,
+            {
+              headers: {
+                authorization: token,
+              },
+            }
+          );
 
-        const socketId = result.data.socketId;
+          const socketId = result.data.socketId;
 
-        socket.emit("activity-check", FRIEND_ID);
+          socket.emit("activity-check", FRIEND_ID);
 
-        socket.on("activity-result", (result) => {
-          const nameActivityRemove = document.getElementById("name-activity");
+          socket.on("activity-result", (result) => {
+            const nameActivityRemove = document.getElementById("name-activity");
 
-          if (nameActivityRemove) {
-            details.removeChild(nameActivityRemove);
-          }
+            if (nameActivityRemove) {
+              details.removeChild(nameActivityRemove);
+            }
 
-          if (result) {
-            SOCKET_ID = socketId;
-            const nameActivity = createUserActivity(name, "Online");
+            if (result) {
+              SOCKET_ID = socketId;
+              const nameActivity = createUserActivity(name, "Online");
 
-            details.appendChild(nameActivity);
-          } else {
-            const nameActivity = createUserActivity(
-              name,
-              "last seen a while ago"
-            );
+              details.appendChild(nameActivity);
+            } else {
+              const nameActivity = createUserActivity(
+                name,
+                "last seen a while ago"
+              );
 
-            details.appendChild(nameActivity);
-          }
-        });
+              details.appendChild(nameActivity);
+            }
+          });
 
-        // get private chat messages from database.
-        const messages = await axios.get(
-          `${website}/chat/getmessages/${PRIVATE_iD}`
-        );
+          // get private chat messages from database.
+          const messages = await axios.get(
+            `${website}/chat/getmessages/${PRIVATE_iD}`
+          );
 
-        console.log(messages);
-        messages.data.result.forEach((message) => {
-          if (message.from === USER_ID) {
-            const msg = createMessage(message.message, "message-sent");
-            messagesDiv.appendChild(msg);
-          } else {
-            const msg = createMessage(message.message, "message-received");
-            messagesDiv.appendChild(msg);
-          }
-        });
+          messages.data.result.forEach((message) => {
+            if (message.from === USER_ID) {
+              const msg = createMessage(message.message, "message-sent");
+              messagesDiv.appendChild(msg);
+            } else {
+              const msg = createMessage(message.message, "message-received");
+              messagesDiv.appendChild(msg);
+            }
+          });
 
-        emptyChatPage.style.display = "none";
-        messagesContainer.style.display = "block";
-
-        ACTIVE_CHAT = true;
-        chats.forEach((chat) => {
-          chat.classList.remove("active");
-        });
-
-        chat.classList.add("active");
-
-        const width = container.offsetWidth;
-        if (width < 750) {
-          chatContainer.style.display = "none";
+          emptyChatPage.style.display = "none";
           messagesContainer.style.display = "block";
+
+          const lastMessage = messagesDiv.lastChild;
+          lastMessage.scrollIntoView();
+
+          ACTIVE_CHAT = true;
+          chats.forEach((chat) => {
+            chat.classList.remove("active");
+          });
+
+          chat.classList.add("active");
+
+          const width = container.offsetWidth;
+          if (width < 750) {
+            chatContainer.style.display = "none";
+            messagesContainer.style.display = "block";
+          }
         }
       });
     });
@@ -260,6 +273,19 @@ createChatGroup.addEventListener("click", (e) => {
 sendButton.addEventListener("click", async (e) => {
   e.preventDefault();
 
+  sendMessage();
+});
+// ------------------------------------------------------------
+
+messageInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+});
+
+// ------------------------------------------------------------
+
+async function sendMessage() {
   const messageInput = document.getElementById("message-input");
 
   if (messageInput.value != "") {
@@ -273,6 +299,9 @@ sendButton.addEventListener("click", async (e) => {
 
     messageInput.value = "";
 
+    const lastMessage = messagesDiv.lastChild;
+    lastMessage.scrollIntoView();
+
     const token = localStorage.getItem("chat-app-token");
     const result = await axios.post(
       `${website}/chat/sendmessage`,
@@ -284,10 +313,10 @@ sendButton.addEventListener("click", async (e) => {
       { headers: { authorization: token } }
     );
   }
-});
+}
 
 // -------------------------------------------------------------
-function createPersonalChat(chatName, id, privateId) {
+function createPersonalChat(chatName, id, privateId, button) {
   const chat = document.createElement("div");
   chat.classList.add("chat");
   chat.id = id;
@@ -296,6 +325,10 @@ function createPersonalChat(chatName, id, privateId) {
   p.textContent = chatName;
 
   chat.appendChild(p);
+
+  if (button) {
+    chat.appendChild(button);
+  }
 
   return chat;
 }
@@ -320,3 +353,35 @@ function createUserActivity(user, activity) {
 
   return nameActivity;
 }
+
+function createSaveChatNameButton() {
+  const buttonDiv = document.createElement("div");
+  buttonDiv.className = "save-button-div";
+
+  const button = document.createElement("button");
+  button.textContent = "+";
+  button.className = "save-button";
+  button.title = "Save";
+
+  buttonDiv.appendChild(button);
+
+  return buttonDiv;
+}
+
+const displaySaveChatNameOverlay = (e) => {
+  const mobileInput = document.getElementById("mobile");
+  const number = e.target.parentElement.parentElement.firstChild.textContent;
+  mobileInput.value = number;
+  saveChatNameOverlay.style.display = "block";
+};
+
+saveChatNameOverlay.addEventListener("click", (e) => {
+  if (
+    e.target.classList.contains("save-chat-name-overlay") ||
+    e.target.classList.contains("save-chat-name-overlay-inside")
+  ) {
+    const mobileInput = document.getElementById("mobile");
+    mobileInput.value = "";
+    saveChatNameOverlay.style.display = "none";
+  }
+});
