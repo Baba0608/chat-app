@@ -14,6 +14,7 @@ const messageInput = document.getElementById("message-input");
 const emptyChatPage = document.getElementById("empty-chat-page");
 const details = document.getElementById("details");
 const saveChatNameOverlay = document.getElementById("save-chat-name-overlay");
+const saveChatNameButton = document.getElementById("save-chat-name-button");
 
 const backArrow = document.getElementById("back-image");
 let ACTIVE_CHAT = false;
@@ -60,6 +61,9 @@ const token = localStorage.getItem("chat-app-token");
     const saveButtons = document.querySelectorAll(".save-button");
     saveButtons.forEach((button) => {
       button.addEventListener("click", (e) => {
+        USER_ID = e.target.parentElement.parentElement.id;
+        PRIVATE_iD = e.target.parentElement.parentElement.privateId;
+        console.log(PRIVATE_iD);
         displaySaveChatNameOverlay(e);
       });
     });
@@ -382,6 +386,39 @@ saveChatNameOverlay.addEventListener("click", (e) => {
   ) {
     const mobileInput = document.getElementById("mobile");
     mobileInput.value = "";
+    saveChatNameOverlay.style.display = "none";
+  }
+});
+
+saveChatNameButton.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const chatNameInput = document.getElementById("chat-name-input");
+
+  if (chatNameInput.value != "") {
+    const friendName = chatNameInput.value;
+    try {
+      await axios.post(
+        `${website}/chat/savechatname`,
+        {
+          friendName: friendName,
+          privateId: PRIVATE_iD,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      const requiresChat = document.getElementById(USER_ID);
+      requiresChat.firstChild.textContent = friendName;
+      alert("Chat name saved.");
+      window.location.reload();
+    } catch (err) {
+      // console.log(err);
+      alert("Something went wrong. Chat name not saved try again");
+    }
+
     saveChatNameOverlay.style.display = "none";
   }
 });

@@ -15,6 +15,26 @@ const getChats = async (req, res, next) => {
   }
 };
 
+const saveChatName = async (req, res, next) => {
+  try {
+    const { privateId, friendName } = req.body;
+    const userId = req.user.dataValues.id;
+    const result = await ChatServices.saveChatName(
+      userId,
+      privateId,
+      friendName
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Friend name updated." });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong." });
+  }
+};
+
 const postChat = async (req, res, next) => {
   try {
     const { message, privateId, to } = req.body;
@@ -46,3 +66,4 @@ const getChatMessages = async (req, res, next) => {
 exports.getChats = getChats;
 exports.postChat = postChat;
 exports.getChatMessages = getChatMessages;
+exports.saveChatName = saveChatName;

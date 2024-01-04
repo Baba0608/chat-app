@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get("/getchats", authorization, chatControllers.getChats);
 
+router.post("/savechatname", authorization, chatControllers.saveChatName);
+
 router.post("/sendmessage", authorization, chatControllers.postChat);
 
 router.get("/getmessages/:privateid", chatControllers.getChatMessages);

@@ -34,6 +34,21 @@ const getMessages = (privateId) => {
   });
 };
 
+const saveChatName = (userId, privateId, friendName) => {
+  return Privatefriends.update(
+    {
+      friendname: friendName,
+    },
+    {
+      where: {
+        userId: userId,
+        privateId: privateId,
+      },
+    }
+  );
+};
+
 exports.getChats = getChats;
 exports.postChat = postChat;
 exports.getMessages = getMessages;
+exports.saveChatName = saveChatName;
