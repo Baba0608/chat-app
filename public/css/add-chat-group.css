@@ -1,27 +1,14 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-body{
-    background-color: beige;
-    font-size: 20px;
-}
-
-.container{
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    align-items: center;
-}
 
 .create-private-group{
     background-color: lightgray;
     border-radius: 10px;
-    
-    
+}
+
+.create-chat-group-overlay-inside{
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
 }
 
 .private-group{
@@ -52,7 +39,7 @@ body{
     padding: 5px 20px;
 }
 
-.active{
+.active-div{
     border-bottom: 3px solid green;
 }
 
@@ -72,3 +59,16 @@ input{
     display: none;
 }
 
+.create-chat-group-overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    cursor: pointer;
+}

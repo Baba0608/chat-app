@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
     <link rel="stylesheet" href="/public/css/chat-page.css">
+    <link rel="stylesheet" href="/public/css/add-chat-group.css">
 </head>
 <body>
 
@@ -103,11 +104,71 @@
             </div>
         </div>
         
+    </div>
+
+    <div class="create-chat-group-overlay" id="create-chat-group-overlay">
+
+        <div class="create-chat-group-overlay-inside">
+
+            <div class="create-private-group" id="create-private-group">
+            
+                <div class="private-group">
+            
+                    <div class="private active-div" id="private">
+                        <p>Private</p>
+                    </div>
+            
+                    <div class="group" id="group">
+                        <p>Group</p>
+                    </div>
+            
+                </div>
+            
+                <div class="private-details" id="private-details">
+            
+                    <label for="private-chat-name">Name</label> <br>
+                    <input type="text" id="private-chat-name" name="private-chat-name" placeholder="Enter Name"> <br>
+            
+                    <label for="private-chat-number">Mobile</label> <br>
+                    <input type="text" id="private-chat-number" name="private-chat-number" placeholder="Enter Mobile Number">
+            
+                    <div class="create-private-chat button">
+                        <button id="create-private-chat-button">Create</button>
+                    </div>
+                </div>
+            
+                <div class="group-details" id="group-details">
+            
+                    <label for="group-chat-name">Name</label> <br>
+                    <input type="text" id="group-chat-name" name="group-chat-name" placeholder="Enter Name"> <br>
+                    
+                    <label for="add-group-members">Add group members</label> <br>
+
+                    <div class="group-members-display">
+
+                    </div>
+
+                    <input type="text" id="add-group-members" name="group-members-input" placeholder="Search...."> <br>
+
+                    <div class="filtered-list">
+                        
+                    </div>
+
+                    <div class="create-group-chat button">
+                        <button id="create-group-chat-button">Create</button>
+                    </div>
+
+                </div>
+            
+            </div>
+
+        </div>   
 
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script src="http://localhost:4000/socket.io/socket.io.js"></script>
     <script src="/public/js/chat-page.js"></script>
+    <script src="/public/js/add-chat-group.js"></script>
 </body>
 </html>

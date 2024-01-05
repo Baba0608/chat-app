@@ -52,7 +52,7 @@ io.on("connection", async (socket) => {
     userFriends[socket.id] = result;
 
     if (userFriends[socket.id]) {
-      userFriends[socket.id].forEach((id) => {
+      userFriends[socket.id].forEach(({ id }) => {
         if (id in connectedUsers) {
           socket
             .to(connectedUsers[id])
@@ -70,8 +70,11 @@ io.on("connection", async (socket) => {
     }
   });
 
-  socket.on("send-message", ({ message, SOCKET_ID }) => {
-    socket.to(SOCKET_ID).emit("private-message", message);
+  socket.on("send-message", ({ message, socketId }) => {
+    socket.to(socketId).emit("private-message", {
+      msg: message,
+      senderUserId: connectedUsers[socket.id],
+    });
   });
 
   socket.on("disconnect", () => {
@@ -80,10 +83,12 @@ io.on("connection", async (socket) => {
     delete connectedUsers[userId];
 
     if (userFriends[socket.id]) {
-      userFriends[socket.id].forEach((id) => {
+      userFriends[socket.id].forEach(({ id }) => {
         socket.to(connectedUsers[id]).emit("user-offline", userId);
       });
     }
+
+    delete userFriends[socket.id];
   });
 });
 
