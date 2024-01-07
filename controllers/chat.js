@@ -3,10 +3,13 @@ const ChatServices = require("../services/chats");
 const getChats = async (req, res, next) => {
   try {
     const id = req.user.dataValues.id;
+    const username = req.user.dataValues.username;
     // console.log(id);
     const result = await ChatServices.getChats(id);
     // console.log(result);
-    return res.status(200).json({ success: true, result, userId: id });
+    return res
+      .status(200)
+      .json({ success: true, result, userId: id, userName: username });
   } catch (err) {
     console.log(err);
     return res

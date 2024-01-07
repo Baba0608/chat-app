@@ -7,10 +7,14 @@ const cors = require("cors");
 const sequelize = require("./utils/database");
 const userRoutes = require("./routes/user");
 const chatRoutes = require("./routes/chat");
+const groupRoutes = require("./routes/group");
 
 // tables
 const Users = require("./models/users");
 const Privatefriend = require("./models/private-friend");
+const Groups = require("./models/groups");
+const Groupmembers = require("./models/group-members");
+const Groupchat = require("./models/group-chat");
 
 const app = express();
 const server = createServer(app);
@@ -27,6 +31,7 @@ app.use(express.static("public"));
 // Routes
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
+app.use("/group", groupRoutes);
 
 // associations
 
@@ -34,6 +39,12 @@ Users.hasMany(Privatefriend);
 Privatefriend.belongsTo(Users, {
   foreignKey: "friendId",
 });
+
+Users.belongsToMany(Groups, { through: Groupmembers, foreignKey: "userId" });
+Groups.belongsToMany(Users, { through: Groupmembers, foreignKey: "groupId" });
+
+Users.hasMany(Groupchat);
+Groupchat.belongsTo(Users);
 
 // ---------
 
@@ -70,12 +81,29 @@ io.on("connection", async (socket) => {
     }
   });
 
-  socket.on("send-message", ({ message, socketId }) => {
-    socket.to(socketId).emit("private-message", {
-      msg: message,
-      senderUserId: connectedUsers[socket.id],
-    });
+  socket.on("send-message", ({ message, FRIEND_ID }) => {
+    const socketId = connectedUsers[FRIEND_ID];
+    if (socketId) {
+      socket.to(socketId).emit("private-message", {
+        msg: message,
+        senderUserId: connectedUsers[socket.id],
+      });
+    }
   });
+
+  socket.on(
+    "send-group-message",
+    ({ message, SELECTED_GROUP_MEMBERS, GROUP_ID, USER_ID }) => {
+      Object.keys(SELECTED_GROUP_MEMBERS).forEach((id) => {
+        socket.to(connectedUsers[id]).emit("message-in-group", {
+          msg: message,
+          groupId: GROUP_ID,
+          senderId: USER_ID,
+          senderNumber: SELECTED_GROUP_MEMBERS[id],
+        });
+      });
+    }
+  );
 
   socket.on("disconnect", () => {
     const userId = connectedUsers[socket.id];

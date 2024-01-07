@@ -86,12 +86,12 @@ body{
     display: flex;
     padding: 10px;
     background-color: rgb(244, 244, 244);
-    /* height: 10vh; */
+    height: 10vh;
 }
 
 .messages{
 
-    height: 81vh;
+    height: 80vh;
 }
 
 .enter-message-container{
@@ -126,7 +126,7 @@ body{
     cursor: pointer;
 }
 
-.chat{
+.chat , .group-chat-div{
     font-size: 25px;
     padding: 10px 10px;
     margin: 5px 0px;
@@ -153,7 +153,7 @@ body{
     border-radius: 10px;
 }
 
-.chat:hover{
+.chat:hover , .group-chat-div:hover{
     background-color: rgba(176, 176, 174 , .5);
     border-radius: 10px;
     transition: all ease-in-out 300ms;
@@ -173,6 +173,40 @@ body{
     display: flex;
     justify-content: flex-start;
     margin-right: 30%;
+}
+
+.group-message-div-received{
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 30%;
+    margin: 5px 0px 5px 5px;
+}
+
+.message-display-name-sent,  .message-display-name-received{  
+    font-size: 15px;
+    color: brown;
+    padding-bottom: 2px;
+}
+
+.message-display-name-sent {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.group-message{
+    background-color: lightseagreen;
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+
+.group-message-div-sent{
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 30%;
+    margin: 5px 0px 5px 5px;
+    margin-left: 30%;
+
 }
 
 .message-sent{
@@ -235,6 +269,28 @@ body{
     background-color: lightgreen;
     border: 1px solid black;
     border-radius: 10px;
+}
+
+
+.privatechat-groupchat{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.privatechat , .groupchat{
+    display: flex;
+    padding: 5px 0px;
+    justify-content: center;
+    width: 50%;   
+}
+
+.privatechat:hover , .groupchat:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.group-chat-list{
+    display: none;
 }
 
 @media (min-width: 900px) and (max-width: 1100px){

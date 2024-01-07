@@ -21,3 +21,5 @@ const Groupchat = sequelize.define("groupchat", {
     type: Sequelize.INTEGER,
   },
 });
+
+module.exports = Groupchat;

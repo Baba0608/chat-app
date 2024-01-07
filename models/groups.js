@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../utils/database");
 
-const Groups = sequelize.define("group", {
+const Groups = sequelize.define("groupnames", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

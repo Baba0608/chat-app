@@ -9,13 +9,8 @@ const Groupmembers = sequelize.define("groupmembers", {
     autoIncrement: true,
   },
 
-  userId: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-
-  groupId: {
-    type: Sequelize.INTEGER,
+  admin: {
+    type: Sequelize.BOOLEAN,
     allowNull: false,
   },
 });

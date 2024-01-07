@@ -31,7 +31,6 @@
 .button{
     display: flex;
     justify-content: center;
-    margin-top: 10px;
 }
 
 .button button{
@@ -71,4 +70,85 @@ input{
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
     cursor: pointer;
+}
+
+
+.filtered-list-div{
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.filtered-list{
+    position: absolute;
+    width: 100%;
+}
+
+.filtered-user{
+    padding: 10px;
+    background-color: lightskyblue;
+    border-bottom: 1px solid black;
+}
+
+.filtered-user:last-child{
+    border-bottom: none;
+}
+
+.group-members-display{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+    width: 500px;
+}
+
+.selected-user{
+    display: flex;
+    background-color: brown;
+    min-width: 100px;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.selected-user p{
+    width: 80%;
+    padding: 5px;
+}
+
+.selected-user button{
+    border: none;
+    background-color: brown;
+    width: 20%;
+    height: 100%;
+    
+    
+}
+
+.remove-user:hover{
+    background-color: red;
+}
+
+@media(max-width: 600px){
+
+    body{
+        font-size: 15px;
+    }
+
+    .private-group{
+        width: 100%;
+    }
+
+    .create-private-group{
+
+        width: 90%;
+    }
+
+    .private , .group{
+        width: 50%;
+    }
+
+    .group-members-display{
+        width: 100%;
+    }
 }
