@@ -293,6 +293,10 @@ body{
     display: none;
 }
 
+#group-name{
+    margin-bottom: 5px;
+}
+
 @media (min-width: 900px) and (max-width: 1100px){
 
     .chat-container{

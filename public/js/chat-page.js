@@ -33,6 +33,8 @@ let USER_NAME = null;
 let SOCKET_ID = null;
 let FRIEND_ID = null;
 let GROUP_ID = null;
+let IS_ADMIN = false;
+let GROUP_NAME = null;
 let FRIEND_NAME = null;
 let PRIVATE_iD = null;
 let FRIENDS_LIST = [];
@@ -148,12 +150,16 @@ const token = localStorage.getItem("chat-app-token");
     backArrow.addEventListener("click", (e) => {
       e.preventDefault();
 
-      chats.forEach((chat) => {
-        chat.classList.remove("active");
-      });
-      ACTIVE_CHAT = false;
+      if (ACTIVE_CHAT) {
+        removeActiveClass(chats);
+        ACTIVE_CHAT = false;
+      } else {
+        removeActiveClass(groupChats);
+        ACTIVE_GROUP = false;
+      }
       messagesContainer.style.display = "none";
       chatContainer.style.display = "flex";
+      chatContainer.style.width = "100%";
     });
   } catch (err) {
     console.log(err);
@@ -438,7 +444,7 @@ function createPersonalChat(chatName, id, privateId, button) {
   return chat;
 }
 
-// adding groups to
+// adding groups to list.
 function createGroupChatDiv(groupName, groupId) {
   const div = document.createElement("div");
   div.className = "group-chat-div";
@@ -471,19 +477,60 @@ function createUserActivity(user, activity) {
   return nameActivity;
 }
 
-function createGroupHeader(groupName) {
+function createGroupHeader(groupName, users) {
   const nameActivity = document.createElement("div");
-  nameActivity.className = "name-activity";
+  nameActivity.className = "name-activity group-header";
   nameActivity.id = "name-activity";
 
   const p1 = document.createElement("p");
   p1.id = "group-name";
   p1.textContent = groupName;
+  GROUP_NAME = groupName;
+
+  const p2 = document.createElement("p");
+  p2.textContent = createGroupMembersList(users);
 
   nameActivity.appendChild(p1);
+  nameActivity.appendChild(p2);
 
   return nameActivity;
 }
+
+const createGroupMembersList = (users) => {
+  let groupMembers = "You , ";
+  const members = Object.keys(users);
+  if (members.length <= 3) {
+    for (let i = 0; i < members.length; i++) {
+      const name = inFriendsList(+members[i], FRIENDS_LIST);
+      if (name != false) {
+        if (i != members.length - 1) {
+          groupMembers += `${name} , `;
+        } else {
+          groupMembers += name;
+        }
+      } else {
+        if (i != members.length - 1) {
+          groupMembers += `${FRIENDS_LIST[members[i]]} , `;
+        } else {
+          groupMembers += FRIENDS_LIST[members[i]];
+        }
+      }
+    }
+  } else {
+    for (let i = 0; i < 3; i++) {
+      const name = inFriendsList(members[i], FRIENDS_LIST);
+      if (name != false) {
+        groupMembers += `${name} , `;
+      } else {
+        groupMembers += `${FRIENDS_LIST[members[i]]} , `;
+      }
+    }
+
+    groupMembers += "...";
+  }
+
+  return groupMembers;
+};
 
 function createSaveChatNameButton() {
   const buttonDiv = document.createElement("div");
@@ -662,9 +709,10 @@ async function displayGroupActivityHeader(group) {
       },
     }
   );
-
+  IS_ADMIN = result.data.admin[0].groupnames[0].groupmembers.admin;
   result.data.result.forEach((user) => {
-    SELECTED_GROUP_MEMBERS[user.id] = user.mobilenumber;
+    const admin = user.groupnames[0].groupmembers.admin;
+    SELECTED_GROUP_MEMBERS[user.id] = [user.mobilenumber, admin];
   });
 
   const nameActivityRemove = document.getElementById("name-activity");
@@ -673,7 +721,7 @@ async function displayGroupActivityHeader(group) {
     details.removeChild(nameActivityRemove);
   }
 
-  const groupHeader = createGroupHeader(name);
+  const groupHeader = createGroupHeader(name, SELECTED_GROUP_MEMBERS);
   details.appendChild(groupHeader);
 }
 

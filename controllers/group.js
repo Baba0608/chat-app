@@ -56,7 +56,8 @@ const getGroupMembers = async (req, res, next) => {
     const id = req.user.dataValues.id;
     const groupId = req.params.groupid;
     const result = await GroupServices.getGroupMembers(groupId, id);
-    return res.status(200).json({ success: true, result });
+    const admin = await GroupServices.isAdmin(groupId, id);
+    return res.status(200).json({ success: true, result, admin });
   } catch (err) {
     console.log(err);
     return res

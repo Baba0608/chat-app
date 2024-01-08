@@ -99,7 +99,7 @@ io.on("connection", async (socket) => {
           msg: message,
           groupId: GROUP_ID,
           senderId: USER_ID,
-          senderNumber: SELECTED_GROUP_MEMBERS[id],
+          senderNumber: SELECTED_GROUP_MEMBERS[id][0],
         });
       });
     }

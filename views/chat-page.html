@@ -6,6 +6,7 @@
     <title>Chat App</title>
     <link rel="stylesheet" href="/public/css/chat-page.css">
     <link rel="stylesheet" href="/public/css/add-chat-group.css">
+    <link rel="stylesheet" href="/public/css/group-description.css">
 </head>
 <body>
 
@@ -66,7 +67,7 @@
             <div class="details" id="details">
 
                 <div class="back">
-                    <p><img  id="back-image" src="/public/images/back-arrow.jpg" alt="back"></p>
+                    <p><img  id="back-image" class="back-image" src="/public/images/back-arrow.jpg" alt="back"></p>
                 </div>
 
                 <!-- <div class="name-activity">
@@ -185,9 +186,37 @@
 
     </div>
 
+    <div class="group-description-overlay" id="group-description-overlay">
+
+        <div class="group-description-overlay-inside">
+
+            <div class="group-description-container" id="group-description-container">
+
+                <div class="groupname-container">
+                    <p id="groupname-in-description">Group name</p>
+                </div>
+                <div class="add-exit-buttons" id="add-exit-buttons">
+                    <div class="exit-group">
+                        <button id="exit-group-button">Exit</button>
+                    </div>
+                </div>
+                
+
+                <h2>Participants</h2>
+
+                <div class="group-members-details-list" id="group-members-details-list" style="overflow-y:scroll;">
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script src="http://localhost:4000/socket.io/socket.io.js"></script>
     <script src="/public/js/chat-page.js"></script>
     <script src="/public/js/add-chat-group.js"></script>
+    <script src="/public/js/group-description.js"></script>
 </body>
 </html>

@@ -1,0 +1,118 @@
+.group-description-overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.group-description-overlay-inside{
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+}
+
+.group-description-container{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 600px;
+}
+
+.groupname-container{
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.add-participants{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.add-participants button{
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: lightblue;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 3px 6px 6px rgba(0,0,0,.4);
+}
+
+.add-participants button:hover{
+    background-color: rgb(116, 202, 231);
+    cursor: pointer;
+}
+
+.group-members-details-list{
+    margin-top: 10px;
+    max-height: 300px;
+}
+
+
+.participants-details{
+    margin: 5px 0px;
+    padding: 10px;
+    background-color:antiquewhite;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-remove-details{
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.admin-display{
+    background-color: lightgreen;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.make-admin{
+    background-color: lightgreen;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.make-admin:hover{
+    background-color: rgb(44, 244, 44);
+}
+
+.remove-participant{
+    background-color: rgb(245, 101, 101);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.remove-participant:hover{
+    background-color: red;
+}
+
+.add-exit-buttons{
+    display: flex;
+    justify-content: center;
+}
+
+.exit-group button{
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: lightblue;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 3px 6px 6px rgba(0, 0, 0, .4);
+    margin-right: 20px;
+    
+}

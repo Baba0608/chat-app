@@ -39,7 +39,26 @@ const getGroupMembers = (groupId, userId) => {
     },
     include: {
       model: Groups,
-      attributes: [],
+      attributes: ["groupname"],
+      where: {
+        id: groupId,
+      },
+      through: {
+        attributes: ["admin"],
+      },
+    },
+  });
+};
+
+const isAdmin = (groupId, userId) => {
+  return Users.findAll({
+    attributes: [],
+    where: {
+      id: userId,
+    },
+    include: {
+      model: Groups,
+      attributes: ["groupname"],
       where: {
         id: groupId,
       },
@@ -69,6 +88,7 @@ const postMessage = (message, groupId, userId) => {
   });
 };
 
+exports.isAdmin = isAdmin;
 exports.createGroup = createGroup;
 exports.addGroupMembers = addGroupMembers;
 exports.getGroups = getGroups;
