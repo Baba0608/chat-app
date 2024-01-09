@@ -1,4 +1,4 @@
-.group-description-overlay {
+.group-description-overlay , .add-participants-overlay{
     position: fixed;
     display: none;
     width: 100%;
@@ -12,14 +12,14 @@
     cursor: pointer;
 }
 
-.group-description-overlay-inside{
+.group-description-overlay-inside , .add-participants-overlay-inside{
     display: flex;
     justify-content: center;
     min-height: 100vh;
     align-items: center;
 }
 
-.group-description-container{
+.group-description-container , .add-participants-input-div{
     background-color: white;
     border-radius: 10px;
     padding: 20px;
@@ -115,4 +115,30 @@
     box-shadow: 3px 6px 6px rgba(0, 0, 0, .4);
     margin-right: 20px;
     
+}
+
+
+.exit-group button:hover {
+    background-color: rgb(116, 202, 231);
+    cursor: pointer;
+}
+
+.add-participants-button-div{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.add-participants-button-div button{
+    font-size: 20px;
+    padding: 5px 15px;
+    background-color: rgb(173, 175, 230);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 6px 6px rgba(0, 0, 0, .4);
+}
+
+.add-participants-button-div button:hover{
+
+    background-color: rgb(114, 118, 227);
 }

@@ -73,18 +73,18 @@ input{
 }
 
 
-.filtered-list-div{
+.filtered-list-div , .filtered-participants-list-div{
     position: relative;
     display: inline-block;
     width: 100%;
 }
 
-.filtered-list{
+.filtered-list , .filtered-participants-list{
     position: absolute;
     width: 100%;
 }
 
-.filtered-user{
+.filtered-user , .filtered-participant{
     padding: 10px;
     background-color: lightskyblue;
     border-bottom: 1px solid black;
@@ -94,14 +94,14 @@ input{
     border-bottom: none;
 }
 
-.group-members-display{
+.group-members-display , .added-participants-display{
     display: flex;
     flex-wrap: wrap;
     margin-top: 5px;
     width: 500px;
 }
 
-.selected-user{
+.selected-user , .selected-participant{
     display: flex;
     background-color: brown;
     min-width: 100px;
@@ -111,12 +111,12 @@ input{
     margin-bottom: 10px;
 }
 
-.selected-user p{
+.selected-user p , .selected-participant p{
     width: 80%;
     padding: 5px;
 }
 
-.selected-user button{
+.selected-user button , .selected-participant button{
     border: none;
     background-color: brown;
     width: 20%;
@@ -125,7 +125,7 @@ input{
     
 }
 
-.remove-user:hover{
+.remove-user:hover , .remove-selected-participant:hover{
     background-color: red;
 }
 

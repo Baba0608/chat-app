@@ -95,8 +95,106 @@ const postMessage = async (req, res, next) => {
   }
 };
 
+const removeParticipant = async (req, res, next) => {
+  try {
+    const userId = req.params.userid;
+    const groupId = req.params.groupid;
+    const result = await GroupServices.removeParticipant(userId, groupId);
+    return res
+      .status(200)
+      .json({ success: true, message: "User removed from group." });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ success: true, message: "Something went wrong." });
+  }
+};
+
+const addParticipants = async (req, res, next) => {
+  try {
+    const { SELECTED_PARTICIPANTS } = req.body;
+    const groupId = req.params.groupid;
+    const users = [];
+    const userIds = Object.keys(SELECTED_PARTICIPANTS);
+    userIds.forEach((id) => {
+      users.push({ userId: +id, groupId: groupId, admin: false });
+    });
+
+    const result = await GroupServices.addGroupMembers(users);
+    return res.status(201).json({ success: true, result });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong." });
+  }
+};
+
+const updateAdmin = async (req, res, next) => {
+  try {
+    const { admin } = req.body;
+    const userId = req.params.userid;
+    const groupId = req.params.groupid;
+    console.log(userId, groupId);
+    await GroupServices.updateAdmin(userId, groupId, admin);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ success: true, message: "Something went wrong." });
+  }
+};
+
+const exitGroup = async (req, res, next) => {
+  try {
+    const userId = req.params.userid;
+    const groupId = req.params.groupid;
+
+    // get count of the group
+    const count = await GroupServices.getGroupCount(groupId);
+    if (count === 1) {
+      await GroupServices.removeParticipant(userId, groupId);
+      await GroupServices.removeGroup(groupId);
+      return res
+        .status(200)
+        .json({ success: true, message: "Exited from the group" });
+    } else {
+      // get admin count
+
+      const adminCount = await GroupServices.getAdminCount(groupId);
+      if (adminCount === 1) {
+        // delete groupMember
+        await GroupServices.removeParticipant(userId, groupId);
+        // make another participant as admin
+        const newAdmin = await GroupServices.findParticipant(groupId);
+        await GroupServices.updateAdmin(newAdmin.userId, groupId, true);
+        return res
+          .status(200)
+          .json({ success: true, message: "Exited from the group" });
+      } else {
+        // delete groupMember
+        await GroupServices.removeParticipant(userId, groupId);
+        return res
+          .status(200)
+          .json({ success: true, message: "Exited from the group" });
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong." });
+  }
+};
+
+exports.exitGroup = exitGroup;
+exports.updateAdmin = updateAdmin;
+exports.addParticipants = addParticipants;
 exports.createGroup = createGroup;
 exports.getGroups = getGroups;
 exports.getGroupMembers = getGroupMembers;
 exports.getMessages = getMessages;
 exports.postMessage = postMessage;
+exports.removeParticipant = removeParticipant;

@@ -271,6 +271,10 @@ body{
     border-radius: 10px;
 }
 
+.save-chat-name-button-div button:hover{
+    background-color: rgb(64, 237, 64);
+}
+
 
 .privatechat-groupchat{
     display: flex;

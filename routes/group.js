@@ -23,4 +23,15 @@ router.post(
   groupControllers.postMessage
 );
 
+router.delete(
+  "/removeparticipant/:userid/:groupid",
+  groupControllers.removeParticipant
+);
+
+router.post("/addparticipants/:groupid", groupControllers.addParticipants);
+
+router.patch("/updateadmin/:userid/:groupid", groupControllers.updateAdmin);
+
+router.delete("/exitgroup/:userid/:groupid", groupControllers.exitGroup);
+
 module.exports = router;

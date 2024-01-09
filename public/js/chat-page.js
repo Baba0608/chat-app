@@ -83,10 +83,14 @@ const token = localStorage.getItem("chat-app-token");
 
     // event to display message container for each personal chat
     const chats = document.querySelectorAll(".chat");
+
+    const groupChats = document.querySelectorAll(".group-chat-div");
+
     chats.forEach((chat) => {
       chat.addEventListener("click", async (e) => {
         e.preventDefault();
 
+        removeActiveClass(groupChats);
         removeActiveClass(chats);
         chat.classList.add("active");
 
@@ -131,17 +135,18 @@ const token = localStorage.getItem("chat-app-token");
       });
     });
 
-    const groupChats = document.querySelectorAll(".group-chat-div");
     groupChats.forEach((groupChat) => {
       groupChat.addEventListener("click", (e) => {
         e.preventDefault();
 
+        removeActiveClass(chats);
         removeActiveClass(groupChats);
         groupChat.classList.add("active");
 
         SELECTED_GROUP_MEMBERS = {};
         displayGroupActivityHeader(groupChat);
         const groupId = groupChat.groupid;
+        GROUP_ID = groupId;
         getMessagesInGroups(groupId);
       });
     });
@@ -499,7 +504,7 @@ function createGroupHeader(groupName, users) {
 const createGroupMembersList = (users) => {
   let groupMembers = "You , ";
   const members = Object.keys(users);
-  if (members.length <= 3) {
+  if (members.length <= 2) {
     for (let i = 0; i < members.length; i++) {
       const name = inFriendsList(+members[i], FRIENDS_LIST);
       if (name != false) {
@@ -510,19 +515,19 @@ const createGroupMembersList = (users) => {
         }
       } else {
         if (i != members.length - 1) {
-          groupMembers += `${FRIENDS_LIST[members[i]]} , `;
+          groupMembers += `${SELECTED_GROUP_MEMBERS[members[i]][0]} , `;
         } else {
-          groupMembers += FRIENDS_LIST[members[i]];
+          groupMembers += SELECTED_GROUP_MEMBERS[members[i]][0];
         }
       }
     }
   } else {
-    for (let i = 0; i < 3; i++) {
-      const name = inFriendsList(members[i], FRIENDS_LIST);
+    for (let i = 0; i < 2; i++) {
+      const name = inFriendsList(+members[i], FRIENDS_LIST);
       if (name != false) {
         groupMembers += `${name} , `;
       } else {
-        groupMembers += `${FRIENDS_LIST[members[i]]} , `;
+        groupMembers += `${SELECTED_GROUP_MEMBERS[members[i]][0]} , `;
       }
     }
 

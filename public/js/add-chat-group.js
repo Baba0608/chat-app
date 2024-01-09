@@ -15,6 +15,10 @@ const createGroupChatButton = document.getElementById(
   "create-group-chat-button"
 );
 
+const groupMembersDetailsList = document.getElementById(
+  "group-members-details-list"
+);
+
 private.addEventListener("click", (e) => {
   e.preventDefault();
   groupChat.classList.remove("active-div");
@@ -161,6 +165,31 @@ createGroupChatButton.addEventListener("click", async (e) => {
     } catch (err) {
       console.log(err);
       alert("Something went wrong. Try again.");
+    }
+  }
+});
+
+groupMembersDetailsList.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  if (e.target.classList.contains("make-admin")) {
+    if (confirm("Are you sure want to make this participant admin ?")) {
+      const userId = e.target.parentElement.parentElement.userId;
+      try {
+        await axios.patch(
+          `${website}/group/updateadmin/${userId}/${GROUP_ID}`,
+          {
+            admin: true,
+          }
+        );
+
+        const name =
+          e.target.parentElement.parentElement.firstChild.textContent;
+        alert(`${name} is an admin now.`);
+        window.location.reload();
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 });
