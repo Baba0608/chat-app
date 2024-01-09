@@ -15,6 +15,7 @@ const Privatefriend = require("./models/private-friend");
 const Groups = require("./models/groups");
 const Groupmembers = require("./models/group-members");
 const Groupchat = require("./models/group-chat");
+const path = require("path");
 
 const app = express();
 const server = createServer(app);
@@ -29,6 +30,9 @@ app.use(cors());
 app.use(express.static("public"));
 
 // Routes
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, `public/${req.url}`));
+});
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
 app.use("/group", groupRoutes);
