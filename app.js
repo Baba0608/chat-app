@@ -30,13 +30,13 @@ app.use(cors());
 app.use(express.static("public"));
 
 // Routes
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, `${req.url}`));
-});
+
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
 app.use("/group", groupRoutes);
-
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, `${req.url}`));
+});
 // associations
 
 Users.hasMany(Privatefriend);
