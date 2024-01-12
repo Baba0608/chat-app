@@ -66,6 +66,21 @@ const getChatMessages = async (req, res, next) => {
   }
 };
 
+const postFiles = async (req, res, next) => {
+  try {
+    console.log("User ####################3333333333", req.user.dataValues.id);
+    const file = req.file;
+    console.log(file);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong." });
+  }
+};
+
+exports.postFiles = postFiles;
 exports.getChats = getChats;
 exports.postChat = postChat;
 exports.getChatMessages = getChatMessages;

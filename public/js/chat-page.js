@@ -1,4 +1,4 @@
-const website = "http://localhost:4000";
+const website = "http://localhost:3000";
 
 const socket = io(`${website}`);
 
@@ -37,7 +37,8 @@ let IS_ADMIN = false;
 let GROUP_NAME = null;
 let FRIEND_NAME = null;
 let PRIVATE_iD = null;
-let FRIENDS_LIST = [];
+let FRIENDS_LIST = []; // [{id: id , name: username}]
+let GROUP_LIST = []; // [{groupId: groupId , groupName: groupName}]
 let SELECTED_GROUP_MEMBERS = {};
 let SELECTED_USERS = {}; // while creating group.
 
@@ -66,6 +67,7 @@ const token = localStorage.getItem("chat-app-token");
     });
 
     const groupDetailsArr = groups.data.result[0].groupnames;
+    GROUP_LIST = [...groupDetailsArr];
     groupDetailsArr.forEach((group) => {
       const groupDiv = createGroupChatDiv(group.groupname, group.groupId);
       groupChatList.appendChild(groupDiv);
@@ -76,7 +78,6 @@ const token = localStorage.getItem("chat-app-token");
       button.addEventListener("click", (e) => {
         USER_ID = e.target.parentElement.parentElement.id;
         PRIVATE_iD = e.target.parentElement.parentElement.privateId;
-        console.log(PRIVATE_iD);
         displaySaveChatNameOverlay(e);
       });
     });
@@ -182,6 +183,12 @@ socket.on("connection-event", async (socketId) => {
 });
 
 socket.on("private-message", ({ msg, senderUserId }) => {
+  const loadingMsgRemove = document.getElementById("loading");
+  if (loadingMsgRemove) {
+    const div = loadingMsgRemove.parentElement.parentElement;
+    console.log(div);
+    messagesDiv.removeChild(div);
+  }
   if (senderUserId == FRIEND_ID) {
     const message = createMessage(msg, "message-received");
     messagesDiv.appendChild(message);
@@ -217,6 +224,12 @@ socket.on("user-offline", (result) => {
 });
 
 socket.on("message-in-group", ({ msg, groupId, senderId, senderNumber }) => {
+  const loadingMsgRemove = document.getElementById("loading");
+  if (loadingMsgRemove) {
+    const div = loadingMsgRemove.parentElement.parentElement.parentElement;
+    messagesDiv.removeChild(div);
+  }
+
   if (groupId == GROUP_ID) {
     const id = +senderId;
     const name = inFriendsList(id, FRIENDS_LIST);
@@ -338,7 +351,8 @@ function createMessage(msg, classname) {
   message.className = classname;
   message.classList.add("message");
   const p = document.createElement("p");
-  p.textContent = msg;
+
+  p.innerHTML = msg;
   message.appendChild(p);
 
   return message;
@@ -402,31 +416,86 @@ messageInput.addEventListener("keypress", (e) => {
 
 async function sendMessagePrivate() {
   const messageInput = document.getElementById("message-input");
-  if (messageInput.value != "") {
+  const mediaFile = document.getElementById("my-file");
+
+  if (messageInput.value != "" || mediaFile.value != "") {
+    if (mediaFile.value != "") {
+      const mediaType = mediaFile.files[0].type.split("/")[0];
+      const fileName = mediaFile.files[0].name;
+      const mediaTypeExt = mediaFile.files[0].type;
+
+      const loading = `<div class="loading" id="loading"></div>`;
+      const loadingMsg = createMessage(loading, "message-sent");
+      messagesDiv.appendChild(loadingMsg);
+      socket.emit("send-message", { message: loading, FRIEND_ID });
+      try {
+        const result = await sendFile(mediaFile);
+        let msg;
+        if (mediaType === "image") {
+          msg = `<img src="${result}" class="media-file-image" width="300" height="250">`;
+        } else if (mediaType === "video") {
+          msg = `<video src="${result}" controls width="300" height="250" class="media-file-video"></video>`;
+        } else {
+          msg = `<a href="${result}" >${fileName}</a>`;
+        }
+
+        const imageResult = await axios.post(
+          `${website}/chat/sendmessage`,
+          {
+            message: msg,
+            to: FRIEND_ID,
+            privateId: PRIVATE_iD,
+          },
+          { headers: { authorization: token } }
+        );
+
+        const loadingMsgRemove = document.getElementById("loading");
+        if (loadingMsgRemove) {
+          const div = loadingMsgRemove.parentElement.parentElement;
+          console.log(div);
+          messagesDiv.removeChild(div);
+        }
+
+        const msgDiv = createMessage(msg, "message-sent");
+        messagesDiv.appendChild(msgDiv);
+        socket.emit("send-message", { message: msg, FRIEND_ID });
+      } catch (err) {
+        console.log(err);
+        const loadingMsgRemove = document.getElementById("loading");
+        if (loadingMsgRemove) {
+          const div = loadingMsgRemove.parentElement.parentElement;
+          console.log(div);
+          messagesDiv.removeChild(div);
+        }
+        alert("Something went wrong..");
+      }
+    }
+
     const message = messageInput.value;
-
     // sending event to server
-    const token = localStorage.getItem("chat-app-token");
+    if (messageInput.value != "") {
+      const token = localStorage.getItem("chat-app-token");
 
-    socket.emit("send-message", { message, FRIEND_ID });
+      socket.emit("send-message", { message, FRIEND_ID });
 
-    const msgDiv = createMessage(message, "message-sent");
-    messagesDiv.appendChild(msgDiv);
+      const msgDiv = createMessage(message, "message-sent");
+      messagesDiv.appendChild(msgDiv);
 
-    messageInput.value = "";
+      messageInput.value = "";
 
-    const lastMessage = messagesDiv.lastChild;
-    lastMessage.scrollIntoView();
+      const lastMessage = messagesDiv.lastChild;
+      lastMessage.scrollIntoView();
 
-    const result = await axios.post(
-      `${website}/chat/sendmessage`,
-      {
-        message: message,
-        to: FRIEND_ID,
-        privateId: PRIVATE_iD,
-      },
-      { headers: { authorization: token } }
-    );
+      const result = await axios.post(
+        `${website}/chat/sendmessage`,
+        {
+          message: message,
+          to: FRIEND_ID,
+          privateId: PRIVATE_iD,
+        },
+        { headers: { authorization: token } }
+      );
+    }
   }
 }
 
@@ -784,7 +853,7 @@ function createSendGroupMessage(message) {
   p1.textContent = "You";
 
   const p2 = document.createElement("p");
-  p2.textContent = message;
+  p2.innerHTML = message;
 
   div.appendChild(p1);
   div.appendChild(p2);
@@ -805,7 +874,7 @@ function createReceivedGroupMessage(message, name) {
   p1.textContent = name;
 
   const p2 = document.createElement("p");
-  p2.textContent = message;
+  p2.innerHTML = message;
 
   div.appendChild(p1);
   div.appendChild(p2);
@@ -816,14 +885,38 @@ function createReceivedGroupMessage(message, name) {
 
 async function sendMessageIngroup() {
   const messageInput = document.getElementById("message-input");
-  if (messageInput.value != "") {
-    const message = messageInput.value;
+  const mediaFile = document.getElementById("my-file");
 
-    try {
-      // store in database.
+  if (messageInput.value != "" || mediaFile.value != "") {
+    if (mediaFile.value != "") {
+      const mediaType = mediaFile.files[0].type.split("/")[0];
+      const fileName = mediaFile.files[0].name;
+
+      const loading = `<div class="loading" id="loading"></div>`;
+      const loadingMsg = createSendGroupMessage(loading);
+      messagesDiv.appendChild(loadingMsg);
+      socket.emit("send-group-message", {
+        message: loading,
+        SELECTED_GROUP_MEMBERS,
+        GROUP_ID,
+        USER_ID,
+      });
+      const result = await sendFile(mediaFile);
+      console.log(result);
+      let msg;
+      if (mediaType === "image") {
+        msg = `<img src="${result}" class="media-file" width="300" height="250">`;
+      } else if (mediaType === "video") {
+        msg = `<video controls autoplay muted width="400" height="300">
+          <source src="${result}" type="${mediaFile.files[0].type}">
+        </video>`;
+      } else {
+        msg = `<a href="${result}" >${fileName}</a>`;
+      }
+
       await axios.post(
         `${website}/group/sendmessage/${GROUP_ID}`,
-        { message: message },
+        { message: msg },
         {
           headers: {
             authorization: token,
@@ -831,23 +924,55 @@ async function sendMessageIngroup() {
         }
       );
 
+      const loadingMsgRemove = document.getElementById("loading");
+      if (loadingMsgRemove) {
+        const div = loadingMsgRemove.parentElement.parentElement.parentElement;
+        messagesDiv.removeChild(div);
+      }
+
+      const msgDiv = createSendGroupMessage(msg);
+      messagesDiv.appendChild(msgDiv);
       socket.emit("send-group-message", {
-        message,
+        message: msg,
         SELECTED_GROUP_MEMBERS,
         GROUP_ID,
         USER_ID,
       });
-
-      const msg = createSendGroupMessage(message);
-      messagesDiv.appendChild(msg);
-    } catch (err) {
-      console.log(err);
     }
-    messageInput.value = "";
 
-    const lastMessage = messagesDiv.lastChild;
-    if (lastMessage) {
-      lastMessage.scrollIntoView();
+    if (messageInput.value != "") {
+      const message = messageInput.value;
+
+      try {
+        // store in database.
+        await axios.post(
+          `${website}/group/sendmessage/${GROUP_ID}`,
+          { message: message },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+
+        socket.emit("send-group-message", {
+          message,
+          SELECTED_GROUP_MEMBERS,
+          GROUP_ID,
+          USER_ID,
+        });
+
+        const msg = createSendGroupMessage(message);
+        messagesDiv.appendChild(msg);
+      } catch (err) {
+        console.log(err);
+      }
+      messageInput.value = "";
+
+      const lastMessage = messagesDiv.lastChild;
+      if (lastMessage) {
+        lastMessage.scrollIntoView();
+      }
     }
   }
 }

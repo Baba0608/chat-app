@@ -3,11 +3,15 @@ const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const multer = require("multer");
+const upload = multer();
+const bodyParser = require("body-parser");
 
 const sequelize = require("./utils/database");
 const userRoutes = require("./routes/user");
 const chatRoutes = require("./routes/chat");
 const groupRoutes = require("./routes/group");
+const fileRoutes = require("./routes/file");
 
 // tables
 const Users = require("./models/users");
@@ -26,6 +30,7 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static("public"));
 
@@ -34,6 +39,7 @@ app.use(express.static("public"));
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
 app.use("/group", groupRoutes);
+app.use("/file", fileRoutes);
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, `${req.url}`));
 });
@@ -125,7 +131,7 @@ io.on("connection", async (socket) => {
 });
 
 // ---------------------------------
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 sequelize
   .sync()

@@ -19,6 +19,10 @@ const groupMembersDetailsList = document.getElementById(
   "group-members-details-list"
 );
 
+const mediaFileImageOverlay = document.getElementById(
+  "media-file-image-overlay"
+);
+
 private.addEventListener("click", (e) => {
   e.preventDefault();
   groupChat.classList.remove("active-div");

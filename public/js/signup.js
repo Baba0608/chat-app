@@ -1,5 +1,5 @@
 // username , email , mobile , password , conform-password
-const website = "http://localhost:4000";
+const website = "http://localhost:3000";
 
 const errorMsg = document.getElementById("error-msg");
 const signupButton = document.getElementById("signup-button");
