@@ -1,6 +1,3 @@
-// username , email , mobile , password , conform-password
-const website = "http://localhost:3000";
-
 const errorMsg = document.getElementById("error-msg");
 const signupButton = document.getElementById("signup-button");
 const wrongPassword = document.getElementById("wrong-password");
@@ -43,7 +40,7 @@ signupButton.addEventListener("click", async (e) => {
       // console.log("Sending data to backend...");
 
       try {
-        const result = await axios.post(`${website}/user/signup`, {
+        const result = await axios.post(`user/signup`, {
           userName: username.value,
           email: email.value,
           mobileNumber: mobile.value,

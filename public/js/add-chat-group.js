@@ -50,7 +50,7 @@ createPrivateChatButton.addEventListener("click", async (e) => {
   if (privateChatName.value != "" && privateChatNumber.value != "") {
     try {
       const result = await axios.post(
-        `${website}/user/createnewchat`,
+        `user/createnewchat`,
         {
           friendName: privateChatName.value,
           friendNumber: privateChatNumber.value,
@@ -154,7 +154,7 @@ createGroupChatButton.addEventListener("click", async (e) => {
   if (groupChatName.value != "" && Object.keys(SELECTED_USERS).length != 0) {
     try {
       const result = await axios.post(
-        `${website}/group/creategroup`,
+        `group/creategroup`,
         { SELECTED_USERS, groupName: groupChatName.value },
         {
           headers: {
@@ -180,12 +180,9 @@ groupMembersDetailsList.addEventListener("click", async (e) => {
     if (confirm("Are you sure want to make this participant admin ?")) {
       const userId = e.target.parentElement.parentElement.userId;
       try {
-        await axios.patch(
-          `${website}/group/updateadmin/${userId}/${GROUP_ID}`,
-          {
-            admin: true,
-          }
-        );
+        await axios.patch(`group/updateadmin/${userId}/${GROUP_ID}`, {
+          admin: true,
+        });
 
         const name =
           e.target.parentElement.parentElement.firstChild.textContent;

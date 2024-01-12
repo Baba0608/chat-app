@@ -15,11 +15,7 @@ async function sendFile(mediaFile) {
     let formData = new FormData();
     formData.append("my-file", file);
 
-    const { data } = await axios.post(
-      `${website}/file/upload`,
-      formData,
-      config
-    );
+    const { data } = await axios.post(`file/upload`, formData, config);
     return data.result;
   } catch (err) {
     console.log(err);

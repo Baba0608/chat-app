@@ -41,7 +41,8 @@ app.use("/chat", chatRoutes);
 app.use("/group", groupRoutes);
 app.use("/file", fileRoutes);
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, `${req.url}`));
+  const routesArr = req.url.split("/");
+  res.sendFile(`${routesArr[1]}`, { root: "views" });
 });
 // associations
 

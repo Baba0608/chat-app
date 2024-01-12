@@ -24,7 +24,7 @@ loginButton.addEventListener("click", async (e) => {
   if (email.value != "" && password.value != "") {
     errorMsg.style.display = "none";
     try {
-      const result = await axios.post(`${website}/user/login`, {
+      const result = await axios.post(`user/login`, {
         email: email.value,
         password: password.value,
       });
