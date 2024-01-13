@@ -83,7 +83,6 @@ const token = localStorage.getItem("chat-app-token");
       e.preventDefault();
 
       if (ACTIVE_CHAT) {
-        console.log("Chats");
         removeActiveClass(chats);
         ACTIVE_CHAT = false;
       } else {
