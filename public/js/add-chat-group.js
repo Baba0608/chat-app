@@ -166,6 +166,7 @@ createGroupChatButton.addEventListener("click", async (e) => {
       alert("Group Created....");
       document.getElementById("create-chat-group-overlay").style.display =
         "none";
+      window.location.reload();
     } catch (err) {
       console.log(err);
       alert("Something went wrong. Try again.");
