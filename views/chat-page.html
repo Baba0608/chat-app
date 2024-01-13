@@ -65,22 +65,27 @@
 
         <div class="messages-container" id="messages-container">
 
-            <div class="details" id="details">
+            <div class="display-container" id="display-container">
 
-                <div class="back">
-                    <p><img  id="back-image" class="back-image" src="/images/back-arrow.jpg" alt="back"></p>
+                <div class="details" id="details">
+                
+                    <div class="back">
+                        <p><img id="back-image" class="back-image" src="/images/back-arrow.jpg" alt="back"></p>
+                    </div>
+                
+                    <!-- <div class="name-activity">
+                                    <p id="chat-name">User 1</p>
+                                    <p id="activity-status">Online</p>
+                                </div> -->
+                
+                </div>
+                
+                <div class="messages" id="messages" style="overflow-y:scroll;">
+                
                 </div>
 
-                <!-- <div class="name-activity">
-                    <p id="chat-name">User 1</p>
-                    <p id="activity-status">Online</p>
-                </div> -->
-                
             </div>
             
-            <div class="messages" id="messages" style="overflow-y:scroll;">
-
-            </div>
 
             <div class="enter-message-container">
                 
@@ -286,5 +291,6 @@
     <script src="/js/add-chat-group.js"></script>
     <script src="/js/group-description.js"></script>
     <script src="/js/add-files.js"></script>
+    <script src="/js/search.js"></script>
 </body>
 </html>

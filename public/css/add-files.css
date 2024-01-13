@@ -85,3 +85,72 @@
     border: 5px solid rgb(87, 87, 240);
     border-radius: 10px;
 }
+
+.messages-container{
+    display: flex;
+    flex-direction: column;
+    display: none;
+
+}
+
+.display-container{
+    height: 86vh;
+}
+
+.details{
+    height: 60px;
+}
+
+.enter-message-container{
+    height: 14vh;
+}
+
+.messages{
+    height: 90%;
+}
+
+.message{
+    max-width: 80%;
+}
+
+
+.media-file-image{
+    width: 100%;
+}
+
+.media-file-video{
+    width: 100%;
+}
+
+@media (max-width:650px){
+    .group-description-container , .add-participants-input-div{
+        width: 90%;
+    }
+    
+    .group-description-container button{
+        font-size: 15px;
+    }
+
+    .add-participants-input-div{
+        padding: 10px;
+    }
+
+    .add-participants-input-div button{
+        font-size: 15px;
+    }
+
+    .media-file-image-container {
+        width: 100%;
+    }
+
+    
+}
+
+
+@media (max-width:475px){
+
+
+    .admin-remove-details {
+        width: 60%;
+    }
+}

@@ -86,16 +86,9 @@ body{
     display: flex;
     padding: 10px;
     background-color: rgb(244, 244, 244);
-    height: 10vh;
-}
-
-.messages{
-
-    height: 75vh;
 }
 
 .enter-message-container{
-    min-height: 10vh;
     display: flex;
     justify-content: space-around;
     padding: 10px 20px;

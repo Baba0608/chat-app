@@ -1,6 +1,4 @@
-const website = "http://localhost:3000";
-
-const socket = io(`${website}`);
+const socket = io();
 
 const sendButton = document.getElementById("send-button");
 const messagesDiv = document.getElementById("messages");
@@ -25,9 +23,12 @@ const createChatGroupOverlay = document.getElementById(
 const privateChat = document.getElementById("privatechat");
 const groupChat = document.getElementById("groupchat");
 
+const searchBox = document.getElementById("chat-name");
+
 const backArrow = document.getElementById("back-image");
 let ACTIVE_CHAT = false;
 let ACTIVE_GROUP = false;
+let CHAT_LIST_DISPLAY = true;
 let USER_ID = null;
 let USER_NAME = null;
 let SOCKET_ID = null;
@@ -37,7 +38,7 @@ let IS_ADMIN = false;
 let GROUP_NAME = null;
 let FRIEND_NAME = null;
 let PRIVATE_iD = null;
-let FRIENDS_LIST = []; // [{id: id , name: username}]
+let FRIENDS_LIST = []; // [{id: id , name: username , privateid: privateId}]
 let GROUP_LIST = []; // [{groupId: groupId , groupName: groupName}]
 let SELECTED_GROUP_MEMBERS = {};
 let SELECTED_USERS = {}; // while creating group.
@@ -87,70 +88,71 @@ const token = localStorage.getItem("chat-app-token");
 
     const groupChats = document.querySelectorAll(".group-chat-div");
 
-    chats.forEach((chat) => {
-      chat.addEventListener("click", async (e) => {
-        e.preventDefault();
+    // chats.forEach((chat) => {
+    //   chat.addEventListener("click", async (e) => {
+    //     e.preventDefault();
 
-        removeActiveClass(groupChats);
-        removeActiveClass(chats);
-        chat.classList.add("active");
+    //     removeActiveClass(groupChats);
+    //     removeActiveClass(chats);
+    //     chat.classList.add("active");
 
-        if (
-          e.target.classList.contains("chat") ||
-          e.target.parentElement.classList.contains("chat")
-        ) {
-          displayChatActivityDiv(chat);
+    //     if (
+    //       e.target.classList.contains("chat") ||
+    //       e.target.parentElement.classList.contains("chat")
+    //     ) {
+    //       displayChatActivityDiv(chat);
 
-          // get private chat messages from database.
-          const messages = await axios.get(`chat/getmessages/${PRIVATE_iD}`);
+    //       // get private chat messages from database.
+    //       const messages = await axios.get(`chat/getmessages/${PRIVATE_iD}`);
 
-          messages.data.result.forEach((message) => {
-            if (message.from === USER_ID) {
-              const msg = createMessage(message.message, "message-sent");
-              messagesDiv.appendChild(msg);
-            } else {
-              const msg = createMessage(message.message, "message-received");
-              messagesDiv.appendChild(msg);
-            }
-          });
+    //       messages.data.result.forEach((message) => {
+    //         if (message.from === USER_ID) {
+    //           const msg = createMessage(message.message, "message-sent");
+    //           messagesDiv.appendChild(msg);
+    //         } else {
+    //           const msg = createMessage(message.message, "message-received");
+    //           messagesDiv.appendChild(msg);
+    //         }
+    //       });
 
-          emptyChatPage.style.display = "none";
-          messagesContainer.style.display = "block";
+    //       emptyChatPage.style.display = "none";
+    //       messagesContainer.style.display = "block";
 
-          const lastMessage = messagesDiv.lastChild;
-          if (lastMessage) {
-            lastMessage.scrollIntoView();
-          }
+    //       const lastMessage = messagesDiv.lastChild;
+    //       if (lastMessage) {
+    //         lastMessage.scrollIntoView();
+    //       }
 
-          ACTIVE_CHAT = true;
-          ACTIVE_GROUP = false;
+    //       ACTIVE_CHAT = true;
+    //       ACTIVE_GROUP = false;
 
-          const width = container.offsetWidth;
-          if (width + 17 < 700) {
-            chatContainer.style.display = "none";
-            messagesContainer.style.display = "block";
-          }
-        }
-      });
-    });
+    //       const width = container.offsetWidth;
+    //       if (width + 17 < 700) {
+    //         chatContainer.style.display = "none";
+    //         messagesContainer.style.display = "block";
+    //       }
+    //     }
+    //   });
+    // });
 
-    groupChats.forEach((groupChat) => {
-      groupChat.addEventListener("click", (e) => {
-        e.preventDefault();
+    // groupChats.forEach((groupChat) => {
+    //   groupChat.addEventListener("click", (e) => {
+    //     e.preventDefault();
 
-        removeActiveClass(chats);
-        removeActiveClass(groupChats);
-        groupChat.classList.add("active");
+    //     removeActiveClass(chats);
+    //     removeActiveClass(groupChats);
+    //     groupChat.classList.add("active");
 
-        SELECTED_GROUP_MEMBERS = {};
-        displayGroupActivityHeader(groupChat);
-        const groupId = groupChat.groupid;
-        GROUP_ID = groupId;
-        getMessagesInGroups(groupId);
-      });
-    });
+    //     SELECTED_GROUP_MEMBERS = {};
+    //     displayGroupActivityHeader(groupChat);
+    //     const groupId = groupChat.groupid;
+    //     GROUP_ID = groupId;
+    //     getMessagesInGroups(groupId);
+    //   });
+    // });
 
     // event for back arrow.
+
     backArrow.addEventListener("click", (e) => {
       e.preventDefault();
 
@@ -181,13 +183,19 @@ socket.on("connection-event", async (socketId) => {
 });
 
 socket.on("private-message", ({ msg, senderUserId }) => {
-  const loadingMsgRemove = document.getElementById("loading");
-  if (loadingMsgRemove) {
-    const div = loadingMsgRemove.parentElement.parentElement;
-    console.log(div);
-    messagesDiv.removeChild(div);
+  const div = document.getElementById(senderUserId);
+  if (div) {
+    chatList.removeChild(div);
+    chatList.prepend(div);
   }
+
   if (senderUserId == FRIEND_ID) {
+    const loadingMsgRemove = document.getElementById("loading");
+    if (loadingMsgRemove) {
+      const div = loadingMsgRemove.parentElement.parentElement;
+      console.log(div);
+      messagesDiv.removeChild(div);
+    }
     const message = createMessage(msg, "message-received");
     messagesDiv.appendChild(message);
 
@@ -343,6 +351,84 @@ k.addEventListener("change", (e) => {
 
 // ----------------------------------------------------
 
+// displaying chat of a particular friend
+chatList.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  if (
+    e.target.classList.contains("chat") ||
+    e.target.parentElement.classList.contains("chat")
+  ) {
+    const chats = document.querySelectorAll(".chat");
+    const groupChats = document.querySelectorAll(".group-chat-div");
+
+    const chat = e.target.classList.contains("chat")
+      ? e.target
+      : e.target.parentElement;
+
+    removeActiveClass(groupChats);
+    removeActiveClass(chats);
+    chat.classList.add("active");
+
+    displayChatActivityDiv(chat);
+
+    // get private chat messages from database.
+    const messages = await axios.get(`chat/getmessages/${PRIVATE_iD}`);
+
+    messages.data.result.forEach((message) => {
+      if (message.from === USER_ID) {
+        const msg = createMessage(message.message, "message-sent");
+        messagesDiv.appendChild(msg);
+      } else {
+        const msg = createMessage(message.message, "message-received");
+        messagesDiv.appendChild(msg);
+      }
+    });
+
+    emptyChatPage.style.display = "none";
+    messagesContainer.style.display = "block";
+
+    const lastMessage = messagesDiv.lastChild;
+    if (lastMessage) {
+      lastMessage.scrollIntoView({ block: "nearest" });
+    }
+
+    ACTIVE_CHAT = true;
+    ACTIVE_GROUP = false;
+
+    const width = container.offsetWidth;
+    if (width + 17 < 700) {
+      chatContainer.style.display = "none";
+      messagesContainer.style.display = "block";
+    }
+  }
+});
+
+groupChatList.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  if (
+    e.target.classList.contains("group-chat-div") ||
+    e.target.parentElement.classList.contains("group-chat-div")
+  ) {
+    const chats = document.querySelectorAll(".chat");
+    const groupChats = document.querySelectorAll(".group-chat-div");
+
+    const groupChat = e.target.classList.contains("group-chat-div")
+      ? e.target
+      : e.target.parentElement;
+    removeActiveClass(groupChats);
+    removeActiveClass(chats);
+    groupChat.classList.add("active");
+
+    SELECTED_GROUP_MEMBERS = {};
+    displayGroupActivityHeader(groupChat);
+    const groupId = groupChat.groupid;
+    GROUP_ID = groupId;
+    getMessagesInGroups(groupId);
+  }
+});
+
 // -------------------------------------------------------------
 function createMessage(msg, classname) {
   const message = document.createElement("div");
@@ -426,13 +512,19 @@ async function sendMessagePrivate() {
       const loadingMsg = createMessage(loading, "message-sent");
       messagesDiv.appendChild(loadingMsg);
       socket.emit("send-message", { message: loading, FRIEND_ID });
+
+      // display at top
+      const div = document.getElementById(FRIEND_ID);
+
+      chatList.removeChild(div);
+      chatList.prepend(div);
       try {
         const result = await sendFile(mediaFile);
         let msg;
         if (mediaType === "image") {
-          msg = `<img src="${result}" class="media-file-image" width="300" height="250">`;
+          msg = `<img src="${result}" class="media-file-image">`;
         } else if (mediaType === "video") {
-          msg = `<video src="${result}" controls width="300" height="250" class="media-file-video"></video>`;
+          msg = `<video src="${result}" controls preload="none" class="media-file-video"></video>`;
         } else {
           msg = `<a href="${result}" >${fileName}</a>`;
         }
@@ -476,7 +568,15 @@ async function sendMessagePrivate() {
 
       socket.emit("send-message", { message, FRIEND_ID });
 
+      //display at top
+      const div = document.getElementById(FRIEND_ID);
+
+      chatList.removeChild(div);
+      chatList.prepend(div);
+      /////
+
       const msgDiv = createMessage(message, "message-sent");
+
       messagesDiv.appendChild(msgDiv);
 
       messageInput.value = "";
@@ -671,22 +771,38 @@ saveChatNameButton.addEventListener("click", async (e) => {
 
 privateChat.addEventListener("click", (e) => {
   e.preventDefault();
-
+  searchBox.value = "";
+  CHAT_LIST_DISPLAY = true;
   groupChatList.style.display = "none";
   chatList.style.display = "block";
 
   groupChat.classList.remove("active-div");
   privateChat.classList.add("active-div");
+
+  // removing the searching effect.
+  groupChatList.innerHTML = "";
+  GROUP_LIST.forEach((group) => {
+    const groupDiv = createGroupChatDiv(group.groupname, group.groupId);
+    groupChatList.appendChild(groupDiv);
+  });
 });
 
 groupChat.addEventListener("click", (e) => {
   e.preventDefault();
-
+  searchBox.value = "";
+  CHAT_LIST_DISPLAY = false;
   chatList.style.display = "none";
   groupChatList.style.display = "block";
 
   privateChat.classList.remove("active-div");
   groupChat.classList.add("active-div");
+
+  // removing the search effect
+  chatList.innerHTML = "";
+  FRIENDS_LIST.forEach((friend) => {
+    const chat = createPersonalChat(friend.name, friend.id, friend.privateid);
+    chatList.appendChild(chat);
+  });
 });
 
 // function for adding personal chats to chatlist.
@@ -695,6 +811,7 @@ function addPersonalChatToChatList(friend) {
     id: friend.friendId,
     name:
       friend.friendname != "" ? friend.friendname : friend.user.mobilenumber,
+    privateid: friend.privateId,
   });
   if (friend.friendname != "") {
     const chat = createPersonalChat(
@@ -900,11 +1017,9 @@ async function sendMessageIngroup() {
       console.log(result);
       let msg;
       if (mediaType === "image") {
-        msg = `<img src="${result}" class="media-file" width="300" height="250">`;
+        msg = `<img src="${result}" class="media-file-image">`;
       } else if (mediaType === "video") {
-        msg = `<video controls autoplay muted width="400" height="300">
-          <source src="${result}" type="${mediaFile.files[0].type}">
-        </video>`;
+        msg = `<video src="${result}" controls preload="none" class="media-file-video"></video>`;
       } else {
         msg = `<a href="${result}" >${fileName}</a>`;
       }
