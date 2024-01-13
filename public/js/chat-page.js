@@ -77,11 +77,13 @@ const token = localStorage.getItem("chat-app-token");
     });
 
     // event for back arrow.
-
+    const chats = document.querySelectorAll(".chat");
+    const groupChats = document.querySelectorAll(".group-chat-div");
     backArrow.addEventListener("click", (e) => {
       e.preventDefault();
 
       if (ACTIVE_CHAT) {
+        console.log("Chats");
         removeActiveClass(chats);
         ACTIVE_CHAT = false;
       } else {
