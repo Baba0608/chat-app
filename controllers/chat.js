@@ -4,12 +4,19 @@ const getChats = async (req, res, next) => {
   try {
     const id = req.user.dataValues.id;
     const username = req.user.dataValues.username;
+    const mobilenumber = req.user.dataValues.mobilenumber;
     // console.log(id);
     const result = await ChatServices.getChats(id);
     // console.log(result);
     return res
       .status(200)
-      .json({ success: true, result, userId: id, userName: username });
+      .json({
+        success: true,
+        result,
+        userId: id,
+        userName: username,
+        mobileNumber: mobilenumber,
+      });
   } catch (err) {
     console.log(err);
     return res
@@ -68,7 +75,6 @@ const getChatMessages = async (req, res, next) => {
 
 const postFiles = async (req, res, next) => {
   try {
-    console.log("User ####################3333333333", req.user.dataValues.id);
     const file = req.file;
     console.log(file);
     return res.status(200).json({ success: true });

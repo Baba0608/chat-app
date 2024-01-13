@@ -116,6 +116,21 @@ io.on("connection", async (socket) => {
     }
   );
 
+  socket.on("first-message", ({ senderUserId, msg, USER_ID }) => {
+    socket
+      .to(connectedUsers[senderUserId])
+      .emit("send-number", { msg, senderUserId: USER_ID });
+  });
+
+  socket.on(
+    "sending-number",
+    ({ msg, senderUserId, mobile, userId, privateId }) => {
+      socket
+        .to(connectedUsers[senderUserId])
+        .emit("receiving-first-msg", { mobile, userId, privateId });
+    }
+  );
+
   socket.on("disconnect", () => {
     const userId = connectedUsers[socket.id];
     delete connectedUsers[socket.id];

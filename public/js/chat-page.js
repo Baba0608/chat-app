@@ -31,13 +31,14 @@ let ACTIVE_GROUP = false;
 let CHAT_LIST_DISPLAY = true;
 let USER_ID = null;
 let USER_NAME = null;
+let MOBILE_NUMBER = null;
 let SOCKET_ID = null;
 let FRIEND_ID = null;
 let GROUP_ID = null;
 let IS_ADMIN = false;
 let GROUP_NAME = null;
 let FRIEND_NAME = null;
-let PRIVATE_iD = null;
+let PRIVATE_ID = null;
 let FRIENDS_LIST = []; // [{id: id , name: username , privateid: privateId}]
 let GROUP_LIST = []; // [{groupId: groupId , groupName: groupName}]
 let SELECTED_GROUP_MEMBERS = {};
@@ -54,6 +55,7 @@ const token = localStorage.getItem("chat-app-token");
 
     USER_ID = result.data.userId;
     USER_NAME = result.data.userName;
+    MOBILE_NUMBER = result.data.mobileNumber;
 
     socket.emit("connected-user", USER_ID);
     result.data.result.forEach((friend) => {
@@ -73,83 +75,6 @@ const token = localStorage.getItem("chat-app-token");
       const groupDiv = createGroupChatDiv(group.groupname, group.groupId);
       groupChatList.appendChild(groupDiv);
     });
-
-    const saveButtons = document.querySelectorAll(".save-button");
-    saveButtons.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        USER_ID = e.target.parentElement.parentElement.id;
-        PRIVATE_iD = e.target.parentElement.parentElement.privateId;
-        displaySaveChatNameOverlay(e);
-      });
-    });
-
-    // event to display message container for each personal chat
-    const chats = document.querySelectorAll(".chat");
-
-    const groupChats = document.querySelectorAll(".group-chat-div");
-
-    // chats.forEach((chat) => {
-    //   chat.addEventListener("click", async (e) => {
-    //     e.preventDefault();
-
-    //     removeActiveClass(groupChats);
-    //     removeActiveClass(chats);
-    //     chat.classList.add("active");
-
-    //     if (
-    //       e.target.classList.contains("chat") ||
-    //       e.target.parentElement.classList.contains("chat")
-    //     ) {
-    //       displayChatActivityDiv(chat);
-
-    //       // get private chat messages from database.
-    //       const messages = await axios.get(`chat/getmessages/${PRIVATE_iD}`);
-
-    //       messages.data.result.forEach((message) => {
-    //         if (message.from === USER_ID) {
-    //           const msg = createMessage(message.message, "message-sent");
-    //           messagesDiv.appendChild(msg);
-    //         } else {
-    //           const msg = createMessage(message.message, "message-received");
-    //           messagesDiv.appendChild(msg);
-    //         }
-    //       });
-
-    //       emptyChatPage.style.display = "none";
-    //       messagesContainer.style.display = "block";
-
-    //       const lastMessage = messagesDiv.lastChild;
-    //       if (lastMessage) {
-    //         lastMessage.scrollIntoView();
-    //       }
-
-    //       ACTIVE_CHAT = true;
-    //       ACTIVE_GROUP = false;
-
-    //       const width = container.offsetWidth;
-    //       if (width + 17 < 700) {
-    //         chatContainer.style.display = "none";
-    //         messagesContainer.style.display = "block";
-    //       }
-    //     }
-    //   });
-    // });
-
-    // groupChats.forEach((groupChat) => {
-    //   groupChat.addEventListener("click", (e) => {
-    //     e.preventDefault();
-
-    //     removeActiveClass(chats);
-    //     removeActiveClass(groupChats);
-    //     groupChat.classList.add("active");
-
-    //     SELECTED_GROUP_MEMBERS = {};
-    //     displayGroupActivityHeader(groupChat);
-    //     const groupId = groupChat.groupid;
-    //     GROUP_ID = groupId;
-    //     getMessagesInGroups(groupId);
-    //   });
-    // });
 
     // event for back arrow.
 
@@ -182,11 +107,37 @@ socket.on("connection-event", async (socketId) => {
   );
 });
 
+socket.on("send-number", ({ msg, senderUserId }) => {
+  socket.emit("sending-number", {
+    msg,
+    senderUserId, // my id
+    mobile: MOBILE_NUMBER, // friend number
+    userId: USER_ID, // friend userId
+    privateId: getPrivateId(senderUserId),
+  });
+});
+
+socket.on("receiving-first-msg", ({ mobile, userId, privateId }) => {
+  FRIENDS_LIST.push({
+    id: userId,
+    name: mobile,
+    privateid: privateId,
+  });
+  const saveButton = createSaveChatNameButton();
+  const chat = createPersonalChat(mobile, userId, privateId, saveButton);
+  chatList.appendChild(chat);
+});
+
 socket.on("private-message", ({ msg, senderUserId }) => {
   const div = document.getElementById(senderUserId);
   if (div) {
     chatList.removeChild(div);
     chatList.prepend(div);
+  }
+
+  const name = inFriendsList(senderUserId, FRIENDS_LIST);
+  if (name === false) {
+    socket.emit("first-message", { senderUserId, msg, USER_ID });
   }
 
   if (senderUserId == FRIEND_ID) {
@@ -351,6 +302,17 @@ k.addEventListener("change", (e) => {
 
 // ----------------------------------------------------
 
+function getPrivateId(id) {
+  let privateId;
+  FRIENDS_LIST.forEach((friend) => {
+    if (friend.id === id) {
+      privateId = friend.privateid;
+    }
+  });
+
+  return privateId;
+}
+
 // displaying chat of a particular friend
 chatList.addEventListener("click", async (e) => {
   e.preventDefault();
@@ -373,7 +335,7 @@ chatList.addEventListener("click", async (e) => {
     displayChatActivityDiv(chat);
 
     // get private chat messages from database.
-    const messages = await axios.get(`chat/getmessages/${PRIVATE_iD}`);
+    const messages = await axios.get(`chat/getmessages/${PRIVATE_ID}`);
 
     messages.data.result.forEach((message) => {
       if (message.from === USER_ID) {
@@ -429,6 +391,15 @@ groupChatList.addEventListener("click", async (e) => {
   }
 });
 
+chatList.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (e.target.classList.contains("save-button")) {
+    USER_ID = e.target.parentElement.parentElement.id;
+    PRIVATE_ID = e.target.parentElement.parentElement.privateId;
+    displaySaveChatNameOverlay(e);
+  }
+});
 // -------------------------------------------------------------
 function createMessage(msg, classname) {
   const message = document.createElement("div");
@@ -511,6 +482,7 @@ async function sendMessagePrivate() {
       const loading = `<div class="loading" id="loading"></div>`;
       const loadingMsg = createMessage(loading, "message-sent");
       messagesDiv.appendChild(loadingMsg);
+
       socket.emit("send-message", { message: loading, FRIEND_ID });
 
       // display at top
@@ -534,7 +506,7 @@ async function sendMessagePrivate() {
           {
             message: msg,
             to: FRIEND_ID,
-            privateId: PRIVATE_iD,
+            privateId: PRIVATE_ID,
           },
           { headers: { authorization: token } }
         );
@@ -589,7 +561,7 @@ async function sendMessagePrivate() {
         {
           message: message,
           to: FRIEND_ID,
-          privateId: PRIVATE_iD,
+          privateId: PRIVATE_ID,
         },
         { headers: { authorization: token } }
       );
@@ -748,7 +720,7 @@ saveChatNameButton.addEventListener("click", async (e) => {
         `chat/savechatname`,
         {
           friendName: friendName,
-          privateId: PRIVATE_iD,
+          privateId: PRIVATE_ID,
         },
         {
           headers: {
@@ -847,7 +819,7 @@ async function displayChatActivityDiv(chat) {
   SELECTED_GROUP_MEMBERS = {};
 
   FRIEND_ID = chat.id;
-  PRIVATE_iD = chat.privateId;
+  PRIVATE_ID = chat.privateId;
   FRIEND_NAME = name;
 
   const result = await axios.get(`user/getsocketid/${FRIEND_ID}`, {

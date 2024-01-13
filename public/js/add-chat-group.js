@@ -25,8 +25,8 @@ const mediaFileImageOverlay = document.getElementById(
 
 private.addEventListener("click", (e) => {
   e.preventDefault();
-  groupChat.classList.remove("active-div");
-  privateChat.classList.add("active-div");
+  group.classList.remove("active-div");
+  private.classList.add("active-div");
 
   groupInput.style.display = "none";
   privateInput.style.display = "block";
@@ -34,8 +34,8 @@ private.addEventListener("click", (e) => {
 
 group.addEventListener("click", (e) => {
   e.preventDefault();
-  privateChat.classList.remove("active-div");
-  groupChat.classList.add("active-div");
+  private.classList.remove("active-div");
+  group.classList.add("active-div");
 
   privateInput.style.display = "none";
   groupInput.style.display = "block";
