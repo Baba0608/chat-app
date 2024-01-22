@@ -3,8 +3,6 @@ const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
-const multer = require("multer");
-const upload = multer();
 const bodyParser = require("body-parser");
 
 const sequelize = require("./utils/database");
@@ -14,12 +12,11 @@ const groupRoutes = require("./routes/group");
 const fileRoutes = require("./routes/file");
 
 // tables
-const Users = require("./models/users");
-const Privatefriend = require("./models/private-friend");
-const Groups = require("./models/groups");
-const Groupmembers = require("./models/group-members");
-const Groupchat = require("./models/group-chat");
-const path = require("path");
+const User = require("./models/users");
+const PrivateFriend = require("./models/private-friend");
+const Group = require("./models/groups");
+const GroupMember = require("./models/group-members");
+const GroupChat = require("./models/group-chat");
 
 const app = express();
 const server = createServer(app);
@@ -46,16 +43,16 @@ app.use((req, res) => {
 });
 // associations
 
-Users.hasMany(Privatefriend);
-Privatefriend.belongsTo(Users, {
+User.hasMany(PrivateFriend);
+PrivateFriend.belongsTo(User, {
   foreignKey: "friendId",
 });
 
-Users.belongsToMany(Groups, { through: Groupmembers, foreignKey: "userId" });
-Groups.belongsToMany(Users, { through: Groupmembers, foreignKey: "groupId" });
+User.belongsToMany(Group, { through: GroupMember, foreignKey: "userId" });
+Group.belongsToMany(User, { through: GroupMember, foreignKey: "groupId" });
 
-Users.hasMany(Groupchat);
-Groupchat.belongsTo(Users);
+User.hasMany(GroupChat);
+GroupChat.belongsTo(User);
 
 // ---------
 

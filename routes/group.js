@@ -5,33 +5,33 @@ const groupControllers = require("../controllers/group");
 
 const router = express.Router();
 
-router.post("/creategroup", authorization, groupControllers.createGroup);
+router.post("/create_group", authorization, groupControllers.createGroup);
 
-router.get("/getgroups", authorization, groupControllers.getGroups);
+router.get("/groups", authorization, groupControllers.getGroups);
 
 router.get(
-  "/getgroupmembers/:groupid",
+  "/group_members/:group_id",
   authorization,
   groupControllers.getGroupMembers
 );
 
-router.get("/getmessages/:groupid", groupControllers.getMessages);
+router.get("/messages/:group_id", groupControllers.getMessages);
 
 router.post(
-  "/sendmessage/:groupid",
+  "/send_message/:group_id",
   authorization,
   groupControllers.postMessage
 );
 
 router.delete(
-  "/removeparticipant/:userid/:groupid",
+  "/remove_participant/:user_id/:group_id",
   groupControllers.removeParticipant
 );
 
-router.post("/addparticipants/:groupid", groupControllers.addParticipants);
+router.post("/add_participants/:group_id", groupControllers.addParticipants);
 
-router.patch("/updateadmin/:userid/:groupid", groupControllers.updateAdmin);
+router.patch("/update_admin/:user_id/:group_id", groupControllers.updateAdmin);
 
-router.delete("/exitgroup/:userid/:groupid", groupControllers.exitGroup);
+router.delete("/exit_group/:user_id/:group_id", groupControllers.exitGroup);
 
 module.exports = router;

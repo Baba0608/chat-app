@@ -49,7 +49,7 @@ const token = localStorage.getItem("chat-app-token");
 (async function () {
   // function
   try {
-    const result = await axios.get(`chat/getchats`, {
+    const result = await axios.get(`chat/chats`, {
       headers: { authorization: token },
     });
 
@@ -65,7 +65,7 @@ const token = localStorage.getItem("chat-app-token");
     socket.emit("friends-list", FRIENDS_LIST);
 
     // get groups
-    const groups = await axios.get(`group/getgroups`, {
+    const groups = await axios.get(`group/groups`, {
       headers: { authorization: token },
     });
 
@@ -102,7 +102,7 @@ const token = localStorage.getItem("chat-app-token");
 
 socket.on("connection-event", async (socketId) => {
   const result = await axios.post(
-    `user/updatesocketid`,
+    `user/update_socket_id`,
     { socketId: socketId },
     { headers: { authorization: token } }
   );
@@ -336,7 +336,7 @@ chatList.addEventListener("click", async (e) => {
     displayChatActivityDiv(chat);
 
     // get private chat messages from database.
-    const messages = await axios.get(`chat/getmessages/${PRIVATE_ID}`);
+    const messages = await axios.get(`chat/messages/${PRIVATE_ID}`);
 
     messages.data.result.forEach((message) => {
       if (message.from === USER_ID) {
@@ -503,7 +503,7 @@ async function sendMessagePrivate() {
         }
 
         const imageResult = await axios.post(
-          `chat/sendmessage`,
+          `chat/send_message`,
           {
             message: msg,
             to: FRIEND_ID,
@@ -558,7 +558,7 @@ async function sendMessagePrivate() {
       lastMessage.scrollIntoView();
 
       const result = await axios.post(
-        `chat/sendmessage`,
+        `chat/send_message`,
         {
           message: message,
           to: FRIEND_ID,
@@ -718,7 +718,7 @@ saveChatNameButton.addEventListener("click", async (e) => {
     const friendName = chatNameInput.value;
     try {
       await axios.post(
-        `chat/savechatname`,
+        `chat/save_chat_name`,
         {
           friendName: friendName,
           privateId: PRIVATE_ID,
@@ -823,7 +823,7 @@ async function displayChatActivityDiv(chat) {
   PRIVATE_ID = chat.privateId;
   FRIEND_NAME = name;
 
-  const result = await axios.get(`user/getsocketid/${FRIEND_ID}`, {
+  const result = await axios.get(`user/socket_id/${FRIEND_ID}`, {
     headers: {
       authorization: token,
     },
@@ -863,7 +863,7 @@ async function displayGroupActivityHeader(group) {
 
   GROUP_ID = group.groupid;
 
-  const result = await axios.get(`group/getgroupmembers/${GROUP_ID}`, {
+  const result = await axios.get(`group/group_members/${GROUP_ID}`, {
     headers: {
       authorization: token,
     },
@@ -887,7 +887,7 @@ async function displayGroupActivityHeader(group) {
 // event to get messages in groupchats
 
 async function getMessagesInGroups(groupId) {
-  const messages = await axios.get(`group/getmessages/${groupId}`);
+  const messages = await axios.get(`group/messages/${groupId}`);
 
   messages.data.result.forEach((message) => {
     if (message.userId === USER_ID) {
@@ -998,7 +998,7 @@ async function sendMessageIngroup() {
       }
 
       await axios.post(
-        `group/sendmessage/${GROUP_ID}`,
+        `group/send_message/${GROUP_ID}`,
         { message: msg },
         {
           headers: {
@@ -1029,7 +1029,7 @@ async function sendMessageIngroup() {
       try {
         // store in database.
         await axios.post(
-          `group/sendmessage/${GROUP_ID}`,
+          `group/send_message/${GROUP_ID}`,
           { message: message },
           {
             headers: {

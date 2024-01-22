@@ -1,17 +1,17 @@
-const Users = require("../models/users");
-const Privatefriend = require("../models/private-friend");
+const User = require("../models/users");
+const PrivateFriend = require("../models/private-friend");
 
 const uuid = require("uuid");
 
 const exists = (email, number) => {
   if (email) {
-    return Users.findOne({
+    return User.findOne({
       where: {
         email: email,
       },
     });
   } else {
-    return Users.findOne({
+    return User.findOne({
       where: {
         mobilenumber: number,
       },
@@ -21,7 +21,7 @@ const exists = (email, number) => {
 
 const userSignup = (req, hash) => {
   const { userName, email, mobileNumber } = req.body;
-  return Users.create({
+  return User.create({
     username: userName,
     email: email,
     mobilenumber: mobileNumber,
@@ -32,7 +32,7 @@ const userSignup = (req, hash) => {
 
 const createPrivateFriend = (userId, friendId, friendName) => {
   const uniqueId = uuid.v4();
-  return Privatefriend.bulkCreate([
+  return PrivateFriend.bulkCreate([
     {
       userId: userId,
       friendId: friendId,
@@ -49,7 +49,7 @@ const createPrivateFriend = (userId, friendId, friendName) => {
 };
 
 const updateSocketId = (userId, socketId) => {
-  return Users.update(
+  return User.update(
     { socketId: socketId },
     {
       where: {
@@ -60,7 +60,7 @@ const updateSocketId = (userId, socketId) => {
 };
 
 const getUser = (id) => {
-  return Users.findOne({
+  return User.findOne({
     where: {
       id: id,
     },

@@ -1,13 +1,13 @@
-const Privatefriends = require("../models/private-friend");
-const Users = require("../models/users");
-const Privatechat = require("../models/private-chat");
+const PrivateFriend = require("../models/private-friend");
+const User = require("../models/users");
+const PrivateChat = require("../models/private-chat");
 
 const getChats = (id) => {
-  return Privatefriends.findAll({
+  return PrivateFriend.findAll({
     attributes: ["friendId", "friendname", "privateId"],
     include: [
       {
-        model: Users,
+        model: User,
         attributes: ["mobilenumber"],
       },
     ],
@@ -18,7 +18,7 @@ const getChats = (id) => {
 };
 
 const postChat = (message, from, to, privateId) => {
-  return Privatechat.create({
+  return PrivateChat.create({
     message: message,
     privateId: privateId,
     from: from,
@@ -27,7 +27,7 @@ const postChat = (message, from, to, privateId) => {
 };
 
 const getMessages = (privateId) => {
-  return Privatechat.findAll({
+  return PrivateChat.findAll({
     where: {
       privateId: privateId,
     },
@@ -35,7 +35,7 @@ const getMessages = (privateId) => {
 };
 
 const saveChatName = (userId, privateId, friendName) => {
-  return Privatefriends.update(
+  return PrivateFriend.update(
     {
       friendname: friendName,
     },

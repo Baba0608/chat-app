@@ -8,15 +8,13 @@ const getChats = async (req, res, next) => {
     // console.log(id);
     const result = await ChatServices.getChats(id);
     // console.log(result);
-    return res
-      .status(200)
-      .json({
-        success: true,
-        result,
-        userId: id,
-        userName: username,
-        mobileNumber: mobilenumber,
-      });
+    return res.status(200).json({
+      success: true,
+      result,
+      userId: id,
+      userName: username,
+      mobileNumber: mobilenumber,
+    });
   } catch (err) {
     console.log(err);
     return res
@@ -62,7 +60,7 @@ const postChat = async (req, res, next) => {
 
 const getChatMessages = async (req, res, next) => {
   try {
-    const privateId = req.params.privateid;
+    const privateId = req.params.private_id;
 
     const result = await ChatServices.getMessages(privateId);
     return res.status(200).json({ success: true, result });

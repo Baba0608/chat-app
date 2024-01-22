@@ -9,10 +9,10 @@ router.post("/signup", userControllers.signup);
 
 router.post("/login", userControllers.login);
 
-router.post("/createnewchat", authorization, userControllers.createNewChat);
+router.post("/create_new_chat", authorization, userControllers.createNewChat);
 
-router.post("/updatesocketid", authorization, userControllers.updateSocketId);
+router.post("/update_socket_id", authorization, userControllers.updateSocketId);
 
-router.get("/getsocketid/:friendid", userControllers.getSocketId);
+router.get("/socket_id/:friend_id", userControllers.getSocketId);
 
 module.exports = router;

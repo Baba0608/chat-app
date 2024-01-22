@@ -5,12 +5,12 @@ const chatControllers = require("../controllers/chat");
 
 const router = express.Router();
 
-router.get("/getchats", authorization, chatControllers.getChats);
+router.get("/chats", authorization, chatControllers.getChats);
 
-router.post("/savechatname", authorization, chatControllers.saveChatName);
+router.post("/save_chat_name", authorization, chatControllers.saveChatName);
 
-router.post("/sendmessage", authorization, chatControllers.postChat);
+router.post("/send_message", authorization, chatControllers.postChat);
 
-router.get("/getmessages/:privateid", chatControllers.getChatMessages);
+router.get("/messages/:private_id", chatControllers.getChatMessages);
 
 module.exports = router;

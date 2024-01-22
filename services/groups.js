@@ -1,28 +1,28 @@
-const Groupmembers = require("../models/group-members");
-const Groups = require("../models/groups");
-const Users = require("../models/users");
-const Groupchats = require("../models/group-chat");
+const GroupMember = require("../models/group-members");
+const Group = require("../models/groups");
+const User = require("../models/users");
+const GroupChat = require("../models/group-chat");
 
 const { Op } = require("sequelize");
 
 const createGroup = (groupName) => {
-  return Groups.create({
+  return Group.create({
     groupname: groupName,
   });
 };
 
 const addGroupMembers = (users) => {
-  return Groupmembers.bulkCreate(users);
+  return GroupMember.bulkCreate(users);
 };
 
 const getGroups = (userId) => {
-  return Users.findAll({
+  return User.findAll({
     attributes: [],
     where: {
       id: userId,
     },
     include: {
-      model: Groups,
+      model: Group,
       attributes: ["groupname", ["id", "groupId"]],
       through: {
         attributes: [],
@@ -32,13 +32,13 @@ const getGroups = (userId) => {
 };
 
 const getGroupMembers = (groupId, userId) => {
-  return Users.findAll({
+  return User.findAll({
     attributes: ["id", "mobilenumber"],
     where: {
       id: { [Op.ne]: userId },
     },
     include: {
-      model: Groups,
+      model: Group,
       attributes: ["groupname"],
       where: {
         id: groupId,
@@ -51,13 +51,13 @@ const getGroupMembers = (groupId, userId) => {
 };
 
 const isAdmin = (groupId, userId) => {
-  return Users.findAll({
+  return User.findAll({
     attributes: [],
     where: {
       id: userId,
     },
     include: {
-      model: Groups,
+      model: Group,
       attributes: ["groupname"],
       where: {
         id: groupId,
@@ -67,21 +67,21 @@ const isAdmin = (groupId, userId) => {
 };
 
 const getMessages = (groupId) => {
-  return Groupchats.findAll({
+  return GroupChat.findAll({
     attributes: ["message", "userId"],
     where: {
       groupId: groupId,
     },
 
     include: {
-      model: Users,
+      model: User,
       attributes: ["username", "mobilenumber"],
     },
   });
 };
 
 const postMessage = (message, groupId, userId) => {
-  return Groupchats.create({
+  return GroupChat.create({
     message: message,
     groupId: groupId,
     userId: userId,
@@ -89,7 +89,7 @@ const postMessage = (message, groupId, userId) => {
 };
 
 const removeParticipant = (userId, groupId) => {
-  return Groupmembers.destroy({
+  return GroupMember.destroy({
     where: {
       groupId: groupId,
       userId: userId,
@@ -98,7 +98,7 @@ const removeParticipant = (userId, groupId) => {
 };
 
 const updateAdmin = (userId, groupId, admin) => {
-  return Groupmembers.update(
+  return GroupMember.update(
     {
       admin: admin,
     },
@@ -112,7 +112,7 @@ const updateAdmin = (userId, groupId, admin) => {
 };
 
 const getGroupCount = (groupId) => {
-  return Groupmembers.count({
+  return GroupMember.count({
     where: {
       groupId: groupId,
     },
@@ -120,7 +120,7 @@ const getGroupCount = (groupId) => {
 };
 
 const removeGroup = (groupId) => {
-  return Groups.destroy({
+  return Group.destroy({
     where: {
       id: groupId,
     },
@@ -128,7 +128,7 @@ const removeGroup = (groupId) => {
 };
 
 const getAdminCount = (groupId) => {
-  return Groupmembers.count({
+  return GroupMember.count({
     where: {
       groupId: groupId,
       admin: true,
@@ -137,7 +137,7 @@ const getAdminCount = (groupId) => {
 };
 
 const findParticipant = (groupId) => {
-  return Groupmembers.findOne({
+  return GroupMember.findOne({
     where: {
       groupId: groupId,
     },

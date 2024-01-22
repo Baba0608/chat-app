@@ -175,7 +175,7 @@ groupMembersDetailsList.addEventListener("click", async (e) => {
     if (confirm("Are you sure want to remove participant ?")) {
       const userId = e.target.parentElement.parentElement.userId;
       try {
-        await axios.delete(`group/removeparticipant/${userId}/${GROUP_ID}`);
+        await axios.delete(`group/remove_participant/${userId}/${GROUP_ID}`);
 
         alert("User Removed from the group...");
         window.location.reload();
@@ -288,7 +288,7 @@ addParticipansButton.addEventListener("click", async (e) => {
 
   if (Object.keys(SELECTED_PARTICIPANTS) != 0) {
     try {
-      await axios.post(`group/addparticipants/${GROUP_ID}`, {
+      await axios.post(`group/add_participants/${GROUP_ID}`, {
         SELECTED_PARTICIPANTS,
       });
 
@@ -310,7 +310,7 @@ groupMembersDetailsList.addEventListener("click", async (e) => {
     if (confirm("Are you sure want to remove this participant as admin ?")) {
       const userId = e.target.parentElement.parentElement.userId;
       try {
-        await axios.patch(`group/updateadmin/${userId}/${GROUP_ID}`, {
+        await axios.patch(`group/update_admin/${userId}/${GROUP_ID}`, {
           admin: false,
         });
 
@@ -331,7 +331,7 @@ addExitButtons.addEventListener("click", async (e) => {
   if (e.target.parentElement.classList.contains("exit-group")) {
     if (confirm("Are you sure want to exit group ?")) {
       try {
-        await axios.delete(`group/exitgroup/${USER_ID}/${GROUP_ID}`);
+        await axios.delete(`group/exit_group/${USER_ID}/${GROUP_ID}`);
 
         alert("You have exited from the group");
         window.location.reload();

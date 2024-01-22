@@ -54,7 +54,7 @@ const getGroups = async (req, res, next) => {
 const getGroupMembers = async (req, res, next) => {
   try {
     const id = req.user.dataValues.id;
-    const groupId = req.params.groupid;
+    const groupId = req.params.group_id;
     const result = await GroupServices.getGroupMembers(groupId, id);
     const admin = await GroupServices.isAdmin(groupId, id);
     return res.status(200).json({ success: true, result, admin });
@@ -68,7 +68,7 @@ const getGroupMembers = async (req, res, next) => {
 
 const getMessages = async (req, res, next) => {
   try {
-    const groupId = req.params.groupid;
+    const groupId = req.params.group_id;
 
     const result = await GroupServices.getMessages(groupId);
     return res.status(200).json({ success: true, result });
@@ -83,7 +83,7 @@ const getMessages = async (req, res, next) => {
 const postMessage = async (req, res, next) => {
   try {
     const userId = req.user.dataValues.id;
-    const groupId = req.params.groupid;
+    const groupId = req.params.group_id;
     const { message } = req.body;
     const result = await GroupServices.postMessage(message, groupId, userId);
     return res.status(201).json({ success: true, result });
@@ -97,8 +97,8 @@ const postMessage = async (req, res, next) => {
 
 const removeParticipant = async (req, res, next) => {
   try {
-    const userId = req.params.userid;
-    const groupId = req.params.groupid;
+    const userId = req.params.user_id;
+    const groupId = req.params.group_id;
     const result = await GroupServices.removeParticipant(userId, groupId);
     return res
       .status(200)
@@ -114,7 +114,7 @@ const removeParticipant = async (req, res, next) => {
 const addParticipants = async (req, res, next) => {
   try {
     const { SELECTED_PARTICIPANTS } = req.body;
-    const groupId = req.params.groupid;
+    const groupId = req.params.group_id;
     const users = [];
     const userIds = Object.keys(SELECTED_PARTICIPANTS);
     userIds.forEach((id) => {
@@ -134,9 +134,9 @@ const addParticipants = async (req, res, next) => {
 const updateAdmin = async (req, res, next) => {
   try {
     const { admin } = req.body;
-    const userId = req.params.userid;
-    const groupId = req.params.groupid;
-    console.log(userId, groupId);
+    const userId = req.params.user_id;
+    const groupId = req.params.group_id;
+
     await GroupServices.updateAdmin(userId, groupId, admin);
     return res.status(200).json({ success: true });
   } catch (err) {
@@ -149,8 +149,8 @@ const updateAdmin = async (req, res, next) => {
 
 const exitGroup = async (req, res, next) => {
   try {
-    const userId = req.params.userid;
-    const groupId = req.params.groupid;
+    const userId = req.params.user_id;
+    const groupId = req.params.group_id;
 
     // get count of the group
     const count = await GroupServices.getGroupCount(groupId);

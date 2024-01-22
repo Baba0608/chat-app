@@ -131,7 +131,7 @@ const updateSocketId = async (req, res, next) => {
 
 const getSocketId = async (req, res, next) => {
   try {
-    const friendId = req.params.friendid;
+    const friendId = req.params.friend_id;
 
     const result = await UserServices.getUser(friendId);
 
